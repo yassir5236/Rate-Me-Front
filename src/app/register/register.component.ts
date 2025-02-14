@@ -15,7 +15,7 @@ export class RegisterComponent {
   isLoading = false;
   errorMessage: string | null = null;
 
-  constructor(private fb: FormBuilder, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private authService: AuthService , private router :Router) {
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.minLength(2)]],
       email: ['', [Validators.required, Validators.email]],
@@ -38,6 +38,8 @@ export class RegisterComponent {
     this.authService.register({ username, email, password }).subscribe({
       next: (response) => {
         alert('Inscription réussie !');
+        this.router.navigate(['/login']); 
+
         console.log('Inscription réussie !', response);
         this.isLoading = false;
       },

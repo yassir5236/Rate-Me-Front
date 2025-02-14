@@ -1,27 +1,30 @@
 <div class="flex min-h-screen items-center justify-center">
     <div class="flex w-full max-w-4xl bg-white shadow-lg rounded-lg overflow-hidden">
       
-      <!-- Section gauche : Formulaire de connexion -->
       <div class="w-1/2 p-20">
         <h1 class="text-3xl font-bold text-[#52AFC9]">Travling!</h1>
   
         <h2 class="mt-6 text-xl font-semibold text-gray-700">Masuk</h2>
   
-        <form class="mt-4 ">
-          <div>
-            <input type="text" class="w-full px-4 py-2 mt-2 border border-[#cedbde] rounded focus:outline-none focus:ring-2 focus:ring-[#52AFC9]" placeholder="Nomor Ponsel atau Email">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+            <div>
+            <input  formControlName="username"
+            type="text" class="w-full px-4 py-2 mt-2 border border-[#cedbde] rounded focus:outline-none focus:ring-2 focus:ring-[#52AFC9]" placeholder="Nomor Ponsel atau Email">
         </div>
   
           <div class="mt-4">
-            <!-- <label class="block text-gray-600">Kata Sandi</label> -->
             <div class="relative">
-                <input type="text" class="w-full px-4 py-2 mt-2 border border-[#cedbde] rounded focus:outline-none focus:ring-2 focus:ring-[#52AFC9]" placeholder="Nomor Ponsel atau password">
+                <input  formControlName="password"  type="text" class="w-full px-4 py-2 mt-2 border border-[#cedbde] rounded focus:outline-none focus:ring-2 focus:ring-[#52AFC9]" placeholder="Nomor Ponsel atau password">
    
             </div>
           </div>
   
           <button class="w-full bg-[#bdbfc0] text-white py-2 rounded-md mt-4">MASUK</button>
-  
+          @if(loginForm.invalid){
+          <div  class="text-red-500 mt-2">
+            Veuillez remplir correctement tous les champs.
+          </div>
+        }
           <div class="mt-2 text-sm text-[#545a5b]">
             Lupa kata sandi? 
             <a href="#" class="text-[#52AFC9]">Klik disini</a>
@@ -96,7 +99,6 @@
         <p class="mt-8 text-xs text-gray-400">© 2021 Travling. All Rights Reserved</p>
       </div>
   
-      <!-- Section droite : Image + Texte -->
       <div class="w-1/2 bg-[#52AFC9] flex items-center justify-center relative">
         <img src="/assets/pexels-brett-sayles-3027216.jpg" alt="Traveling" class="absolute w-full h-full object-cover z-10">
         
@@ -105,7 +107,6 @@
             Start your journey by one click, explore beautiful world!
           </h2>
 
-          <!-- Pagination -->
           <div class="absolute bottom-6 flex space-x-2">
             <span class="w-3 h-3 bg-white rounded-full"></span>
             <span class="w-3 h-3 bg-gray-300 rounded-full"></span>
@@ -115,4 +116,8 @@
       </div>
       
     </div>
+
+    <button class="bg-amber-700 p-4 m-4 " routerLink="/test" (click)="test()">Click to test</button>
 </div>
+
+
