@@ -1,40 +1,51 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule ,RouterLink],
+  imports: [ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.css'
+  styleUrl: './login.component.css',
 })
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   loginForm: FormGroup;
+  isLoggedIn: boolean = false;
 
-  constructor(private fb: FormBuilder, private authService: AuthService , private router: Router) {
-    // Initialisation du formulaire avec des validations
+  constructor(
+    private fb: FormBuilder,
+    private authService: AuthService,
+    private router: Router
+  ) {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required]], // validation email ou téléphone
-      password: ['', [Validators.required, Validators.minLength(6)]] // validation mot de passe
+      username: ['', [Validators.required]],
+      password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
+  ngOnInit(): void {
+    throw new Error('Method not implemented.');
+  }
 
-  // Méthode de soumission du formulaire
   onSubmit(): void {
     if (this.loginForm.valid) {
       const user = this.loginForm.value;
       this.authService.login(user).subscribe(
-        response => {
+        (response) => {
           console.log(response); // Success, handle the response
           localStorage.setItem('token', response.token); // Stocke le token
 
-          this.router.navigate(['/test']);
+          this.router.navigate(['/profile']);
         },
-        error => {
+        (error) => {
           console.error(error);
           // Display error message to the user
-          alert(error.error || "An error occurred during login.");
+          alert(error.error || 'An error occurred during login.');
         }
       );
     }
@@ -42,15 +53,16 @@ export class LoginComponent {
 
   test() {
     this.authService.test().subscribe(
-      response => {
+      (response) => {
         console.log('Réponse du serveur:', response);
         alert(response); // Affiche la réponse dans une alerte
       },
-      error => {
+      (error) => {
         console.error('Erreur lors de l’appel à test:', error);
         alert('Erreur lors de l’appel au backend.');
       }
     );
-  
-  
-}}
+  }
+
+
+}
