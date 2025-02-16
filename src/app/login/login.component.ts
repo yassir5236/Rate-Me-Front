@@ -28,8 +28,11 @@ export class LoginComponent implements OnInit {
       password: ['', [Validators.required, Validators.minLength(6)]],
     });
   }
-  ngOnInit(): void {
-    throw new Error('Method not implemented.');
+
+  ngOnInit() { 
+    this.authService.isLoggedIn().subscribe((status) => {
+      this.isLoggedIn = status;
+    });
   }
 
   onSubmit(): void {
@@ -37,10 +40,12 @@ export class LoginComponent implements OnInit {
       const user = this.loginForm.value;
       this.authService.login(user).subscribe(
         (response) => {
+          alert('Connexion réussie');
+          this.router.navigate(['/profile']);
           console.log(response); // Success, handle the response
           localStorage.setItem('token', response.token); // Stocke le token
 
-          this.router.navigate(['/profile']);
+      
         },
         (error) => {
           console.error(error);

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root',
@@ -12,7 +13,8 @@ export class AuthService {
 
   private apiUrl = 'http://localhost:8081/api/public'; 
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient ,  private router: Router) {}
+ 
 
 
   private hasToken(): boolean {
@@ -46,5 +48,12 @@ export class AuthService {
 
   isLoggedIn(): Observable<boolean> {
     return this.isAuthenticated.asObservable();
+  }
+
+  logout(): void {
+    
+    localStorage.removeItem('token');
+    this.isAuthenticated.next(false);
+    this.router.navigate(['/login']);
   }
 }
