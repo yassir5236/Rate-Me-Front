@@ -4,11 +4,15 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 
+import { tap } from 'rxjs/operators';  // ✅ Import ajouté
+
+
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private isAuthenticated = new BehaviorSubject<boolean>(this.hasToken());
+  private loggedIn = new BehaviorSubject<boolean>(false); 
 
 
   private apiUrl = 'http://localhost:8081/api/public'; 
@@ -24,9 +28,19 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, user);
   }
 
+  // login(user: any): Observable<any> {
+  //   return this.http.post<{ token: string }>(`${this.apiUrl}/login`, user);
+  // }
+
   login(user: any): Observable<any> {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, user);
+    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, user).pipe(
+      tap((response) => {
+        localStorage.setItem('token', response.token);
+        this.isAuthenticated.next(true);  // ✅ Met à jour l'état après connexion
+      })
+    );
   }
+  
 
   test(): Observable<any> {
     return this.http.get('http://localhost:8081/api/test');

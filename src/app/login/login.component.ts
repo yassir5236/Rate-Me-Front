@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 import { Router, RouterLink } from '@angular/router';
+import { ChangeDetectorRef } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+
+
 import {
   FormBuilder,
   FormGroup,
@@ -18,10 +22,12 @@ export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isLoggedIn: boolean = false;
 
+
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private cdRef: ChangeDetectorRef
   ) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
@@ -29,11 +35,15 @@ export class LoginComponent implements OnInit {
     });
   }
 
-  ngOnInit() { 
-    this.authService.isLoggedIn().subscribe((status) => {
+
+
+  ngOnInit() {
+    this.authService.isLoggedIn().subscribe(status => {
       this.isLoggedIn = status;
+      this.cdRef.detectChanges(); // ✅ Force la mise à jour du Header
     });
   }
+
 
   onSubmit(): void {
     if (this.loginForm.valid) {
@@ -42,19 +52,16 @@ export class LoginComponent implements OnInit {
         (response) => {
           alert('Connexion réussie');
           this.router.navigate(['/profile']);
-          console.log(response); // Success, handle the response
-          localStorage.setItem('token', response.token); // Stocke le token
-
-      
         },
         (error) => {
           console.error(error);
-          // Display error message to the user
           alert(error.error || 'An error occurred during login.');
         }
       );
     }
   }
+  
+  
 
   test() {
     this.authService.test().subscribe(
