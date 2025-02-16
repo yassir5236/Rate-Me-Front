@@ -14,6 +14,7 @@ export class AuthService {
   private isAuthenticated = new BehaviorSubject<boolean>(this.hasToken());
   private loggedIn = new BehaviorSubject<boolean>(false); 
 
+  private role: string = '';
 
   private apiUrl = 'http://localhost:8081/api/public'; 
 
@@ -21,8 +22,21 @@ export class AuthService {
  
 
 
+  // private hasToken(): boolean {
+  //   return !!localStorage.getItem('token');
+  // }
+
   private hasToken(): boolean {
-    return !!localStorage.getItem('token');
+    const token = localStorage.getItem('token');
+    if (token) {
+      console.log('yes', token);
+      const decoded: any = jwtDecode(token);
+      console.log('decoded', decoded);
+      this.role = decoded.role;  
+      console.log('role', this.role);
+      return true;
+    }
+    return false;
   }
   register(user: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/register`, user);
@@ -41,6 +55,12 @@ export class AuthService {
     );
   }
   
+
+
+
+  getRole(): string {
+    return this.role;
+  }
 
   test(): Observable<any> {
     return this.http.get('http://localhost:8081/api/test');

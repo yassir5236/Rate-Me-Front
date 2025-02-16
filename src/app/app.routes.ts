@@ -5,12 +5,14 @@ import { LoginComponent } from './login/login.component';
 import { TestComponent } from './test/test/test.component';
 import { ProfileComponent } from './profile/profile.component';
 import { AuthGuard } from './guards/auth.guard';
+import { DashboardComponent } from './dashboard/dashboard.component';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', component: HomeComponent },
     { path: 'register', pathMatch: 'full', component: RegisterComponent,  }, 
     { path: 'login', component: LoginComponent }, 
     {path:'test',component: TestComponent},
-    {path :'profile',component: ProfileComponent }
+    {path :'profile',component: ProfileComponent },
+    {path : 'dashboard',component: DashboardComponent}
   
 ];

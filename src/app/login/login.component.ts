@@ -40,7 +40,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.authService.isLoggedIn().subscribe(status => {
       this.isLoggedIn = status;
-      this.cdRef.detectChanges(); // ✅ Force la mise à jour du Header
+      this.cdRef.detectChanges(); 
     });
   }
 

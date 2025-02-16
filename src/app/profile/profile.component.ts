@@ -33,7 +33,8 @@ export class ProfileComponent implements OnInit {
 
     this.userService.getUserProfile().subscribe(data => {
       this.profileForm.patchValue(data);
-      this.profileImage = data.profilePicture; // Afficher l'URL directement
+      this.profileImage = data.profilePicture;
+      console.log(data)
    
 
       if (!data.location || !data.profilePicture || !data.bio) {

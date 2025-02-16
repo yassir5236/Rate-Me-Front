@@ -13,9 +13,17 @@
         Sign up <br />now and start exploring the world together.
       </p>
 
+      @if(!isLoggedIn){
       <button routerLink="/login"  class="bg-black text-white rounded px-4 py-2 w-fit">
         Login for free
       </button>
+    }
+
+    @if(isLoggedIn){
+      <button routerLink="/login"  class="bg-black text-white rounded px-4 py-2 w-fit">
+        Learn more
+      </button>
+    }
     </div>
     <img
       src="/assets/pexels-kindelmedia-7294261.jpg"

@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-header',
@@ -12,10 +13,14 @@ import { AuthService } from '../../services/auth.service';
 export class HeaderComponent {
   isLoggedIn: boolean = false;
   user: any = null;
-  userRole: string = ''; 
+  userRole: string = '';
   isMenuOpen = false;
 
-  constructor( private router: Router ,private authService :AuthService ) {}
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    private userService: UserService
+  ) {}
 
   toggleMenu() {
     this.isMenuOpen = !this.isMenuOpen;
@@ -23,17 +28,19 @@ export class HeaderComponent {
   ngOnInit(): void {
     this.authService.isLoggedIn().subscribe((status) => {
       this.isLoggedIn = status;
+      // this.userRole = this.authService.getRole();
 
+      this.userService.getUserProfile().subscribe(data => {
+         this.userRole=data.role;
+      });
+    
     });
-    };
-
-
-    logout(): void {
-      this.authService.logout();
-    }
   }
 
 
+  
 
-
-
+  logout(): void {
+    this.authService.logout();
+  }
+}
