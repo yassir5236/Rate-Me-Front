@@ -17,6 +17,7 @@ export class ProfileComponent implements OnInit {
   isEditing = false;
   profileImage: string | null = null;
   file!: File;
+  userName : string='';
 
 
   constructor(private userService: UserService, private fb: FormBuilder,    private sanitizer: DomSanitizer
@@ -34,6 +35,7 @@ export class ProfileComponent implements OnInit {
     this.userService.getUserProfile().subscribe(data => {
       this.profileForm.patchValue(data);
       this.profileImage = data.profilePicture;
+      this.userName=data.username;
       console.log(data)
    
 
