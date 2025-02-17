@@ -1,0 +1,139 @@
+<div class="max-w-6xl mx-auto p-8 bg-white rounded-lg shadow-xl">
+  <h2 class="text-3xl font-semibold text-gray-800 mb-6">Gestion des Lieux</h2>
+
+  <!-- Button to Add Place -->
+  <button
+    class="bg-gradient-to-r from-green-500 to-teal-600 hover:from-green-600 hover:to-teal-700 text-white font-semibold py-2 px-6 rounded-lg mb-6 transition-all duration-200 shadow-md hover:shadow-lg"
+    (click)="openForm()">
+    ➕ Ajouter un lieu
+  </button>
+
+  <!-- Add/Edit Form -->
+  <div *ngIf="showForm" class="bg-gray-100 p-6 rounded-lg shadow-lg mb-8 max-w-3xl mx-auto">
+    <h3 class="text-2xl font-medium text-gray-800 mb-4">{{ placeForm.get('id')?.value ? 'Modifier' : 'Ajouter' }} un lieu</h3>
+    <form [formGroup]="placeForm" (ngSubmit)="savePlace()" class="space-y-6">
+      <!-- Name -->
+      <div class="flex flex-col">
+        <label for="name" class="text-gray-700 font-medium mb-2">Nom :</label>
+        <input
+          type="text"
+          id="name"
+          formControlName="name"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+        />
+      </div>
+
+      <!-- Description -->
+      <div class="flex flex-col">
+        <label for="description" class="text-gray-700 font-medium mb-2">Description :</label>
+        <textarea
+          id="description"
+          formControlName="description"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+        ></textarea>
+      </div>
+
+      <!-- Photo -->
+      <div class="flex flex-col">
+        <label for="photo" class="text-gray-700 font-medium mb-2">Photo :</label>
+        <input
+          type="text"
+          id="photo"
+          formControlName="photo"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+        />
+      </div>
+
+      <!-- Address -->
+      <div class="flex flex-col">
+        <label for="address" class="text-gray-700 font-medium mb-2">Adresse :</label>
+        <input
+          type="text"
+          id="address"
+          formControlName="address"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+        />
+      </div>
+
+      <!-- Latitude -->
+      <div class="flex flex-col">
+        <label for="latitude" class="text-gray-700 font-medium mb-2">Latitude :</label>
+        <input
+          type="number"
+          id="latitude"
+          formControlName="latitude"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+        />
+      </div>
+
+      <!-- Longitude -->
+      <div class="flex flex-col">
+        <label for="longitude" class="text-gray-700 font-medium mb-2">Longitude :</label>
+        <input
+          type="number"
+          id="longitude"
+          formControlName="longitude"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+        />
+      </div>
+
+      <!-- Average Rating -->
+      <div class="flex flex-col">
+        <label for="averageRating" class="text-gray-700 font-medium mb-2">Note moyenne :</label>
+        <input
+          type="number"
+          id="averageRating"
+          formControlName="averageRating"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+        />
+      </div>
+
+      <!-- Category -->
+      <div class="flex flex-col">
+        <label for="categoryId" class="text-gray-700 font-medium mb-2">Catégorie :</label>
+        <select
+          id="categoryId"
+          formControlName="categoryId"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+        >
+          <option *ngFor="let category of categories" [value]="category.id">{{ category.name }}</option>
+        </select>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="flex justify-between space-x-4">
+        <button
+          type="submit"
+          class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200">
+          ✅ Enregistrer
+        </button>
+        <button
+          type="button"
+          (click)="closeForm()"
+          class="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-6 rounded-lg transition-all duration-200">
+          ❌ Annuler
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Places Cards -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+    <div *ngFor="let place of places" class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 transition-transform transform hover:scale-105 duration-300 ease-in-out">
+      <h4 class="text-2xl font-medium text-gray-800">{{ place.name }}</h4>
+      <p class="text-sm text-gray-500">Catégorie: {{ place.category.name }}</p>
+      <div class="mt-4 flex justify-between space-x-4">
+        <button
+          (click)="openForm(place)"
+          class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200">
+          ✏️ Modifier
+        </button>
+        <button
+          (click)="place.id && deletePlace(place.id)"
+          class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200">
+          🗑️ Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

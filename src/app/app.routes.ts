@@ -1,11 +1,12 @@
 import { Routes } from '@angular/router';
-import { HomeComponent } from './shared/home/home.component';
-import { RegisterComponent } from './register/register.component';
-import { LoginComponent } from './login/login.component';
-import { TestComponent } from './test/test/test.component';
-import { ProfileComponent } from './profile/profile.component';
-import { AuthGuard } from './guards/auth.guard';
+import { CategoryComponent } from './category/category.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
+import { LoginComponent } from './login/login.component';
+import { ProfileComponent } from './profile/profile.component';
+import { RegisterComponent } from './register/register.component';
+import { HomeComponent } from './shared/home/home.component';
+import { TestComponent } from './test/test/test.component';
+import { PlaceManagementComponent } from './place-management/place-management.component';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', component: HomeComponent },
@@ -13,6 +14,8 @@ export const routes: Routes = [
     { path: 'login', component: LoginComponent }, 
     {path:'test',component: TestComponent},
     {path :'profile',component: ProfileComponent },
-    {path : 'dashboard',component: DashboardComponent}
+    {path : 'dashboard',component: DashboardComponent},
+    {path : 'category',component: CategoryComponent},
+    {path:'places',component:PlaceManagementComponent},
   
 ];
