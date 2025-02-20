@@ -62,6 +62,7 @@ export interface Place {
   latitude?: number;
   longitude?: number;
   averageRating?: number;
+  userId: number;
   category: {  // Nested category object to match backend response
     id: number | null;
     name: string;
@@ -83,8 +84,17 @@ export class PlaceService {
     return this.http.post(`${this.apiUrl}`, formData);
   }
   
+  // updatePlace(id: number, formData: FormData): Observable<any> {
+  //   return this.http.put(`${this.apiUrl}/${id}`, formData);
+  // }
+
   updatePlace(id: number, formData: FormData): Observable<any> {
-    return this.http.put(`${this.apiUrl}/${id}`, formData);
+    return this.http.put(`${this.apiUrl}/${id}`, formData, {
+      headers: {
+        // Ensure the Content-Type is set correctly
+        'Accept': 'application/json',
+      },
+    });
   }
   deletePlace(id: number): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
