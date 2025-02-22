@@ -25,7 +25,10 @@ export class PlaceManagementComponent implements OnInit {
   selectedImages: ImageFile[] = []; // Store selected images
   places: Place[] = [];
   categories: Category[] = [];
-  currentUserId: string | null = null; // Stocker l'ID de l'utilisateur connecté
+  currentUserId: string | null = null; 
+  currentUserId2: number | null = null; 
+
+  profilePicture : string | null = null;
   placeForm!: FormGroup;
   showForm = false;
   pic:string []=[];
@@ -150,7 +153,9 @@ export class PlaceManagementComponent implements OnInit {
     this.userService.getUserProfile().subscribe({
       next: (data) => {
         try {
-          this.currentUserId = data.id; // Stocker l'ID de l'utilisateur
+          this.currentUserId = data.id; 
+          this.currentUserId2 =data.id; 
+          this.profilePicture=data.profilePicture
           console.log("User ID:", this.currentUserId);
         } catch (error) {
           console.error("Erreur lors de l'analyse du JSON:", error);

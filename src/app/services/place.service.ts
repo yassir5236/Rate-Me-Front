@@ -63,10 +63,17 @@ export interface Place {
   longitude?: number;
   averageRating?: number;
   userId: number;
-  category: {  // Nested category object to match backend response
+  category: {  
     id: number | null;
     name: string;
   };
+  user:{
+    id: number;
+    name: string;
+    email: string;
+    description: string;
+    
+  }
 }
 @Injectable({
   providedIn: 'root'
