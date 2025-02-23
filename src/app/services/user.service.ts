@@ -10,10 +10,24 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
+  // getUserProfile(): Observable<any> {
+  //   const headers = new HttpHeaders({
+  //     Authorization: `Bearer ${localStorage.getItem('token')}`
+  //   });
+  //   return this.http.get(`${this.apiUrl}/me`, { headers });
+  // }
+
+
   getUserProfile(): Observable<any> {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      throw new Error('Token non trouvé');
+    }
+  
     const headers = new HttpHeaders({
-      Authorization: `Bearer ${localStorage.getItem('token')}`
+      Authorization: `Bearer ${token}`
     });
+  
     return this.http.get(`${this.apiUrl}/me`, { headers });
   }
 

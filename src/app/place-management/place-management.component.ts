@@ -1,7 +1,3 @@
-
-
-
-
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Place, PlaceService } from '../services/place.service';
@@ -9,6 +5,7 @@ import { Category, CategoryService } from '../services/category.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../services/user.service';
+import { ReviewComponent } from '../review/review.component';
 
 interface ImageFile {
   file: File;
@@ -17,16 +14,18 @@ interface ImageFile {
 
 @Component({
   selector: 'app-place-management',
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule ,ReviewComponent ],
   templateUrl: './place-management.component.html',
   styleUrls: ['./place-management.component.css']
 })
 export class PlaceManagementComponent implements OnInit {
-  selectedImages: ImageFile[] = []; // Store selected images
+  selectedImages: ImageFile[] = []; 
   places: Place[] = [];
   categories: Category[] = [];
   currentUserId: string | null = null; 
   currentUserId2: number | null = null; 
+  showReviewForPlaceId: number = -1; 
+
 
   profilePicture : string | null = null;
   placeForm!: FormGroup;
@@ -45,12 +44,29 @@ export class PlaceManagementComponent implements OnInit {
     this.getPlaces();
     this.getCategories();
     this.initForm();
-    this.getCurrentUser(); // Récupérer l'utilisateur connecté
+    this.getCurrentUser(); 
 
     this.placeService.getAllPlaces().subscribe(data=>{
       // this.selectedImages = data.push
     })
   }
+
+
+
+  toggleReviewSection(placeId: number | null | undefined): void {
+    if (!placeId) {
+      console.error("L'ID du lieu est invalide ou manquant.");
+      return; 
+    }
+  
+    if (this.showReviewForPlaceId === placeId) {
+      this.showReviewForPlaceId = -1; 
+    } else {
+      this.showReviewForPlaceId = placeId; 
+    }
+  }
+
+
 
   initForm() {
     this.placeForm = this.fb.group({
@@ -62,7 +78,7 @@ export class PlaceManagementComponent implements OnInit {
       longitude: [null],
       averageRating: [null],
       categoryId: [null, Validators.required],
-      userId: [null, Validators.required] // Ajouter l'ID de l'utilisateur
+      userId: [null, Validators.required]
     });
   }
 
@@ -71,7 +87,7 @@ export class PlaceManagementComponent implements OnInit {
     if (files && files.length > 0) {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        if (file.size > 5 * 1024 * 1024) { // Max file size: 5MB
+        if (file.size > 5 * 1024 * 1024) { 
           alert(`La taille du fichier "${file.name}" ne doit pas dépasser 5MB`);
           continue;
         }
@@ -97,36 +113,29 @@ export class PlaceManagementComponent implements OnInit {
       return;
     }
   
-    // Mettre à jour l'ID de l'utilisateur dans le formulaire
     this.placeForm.patchValue({ userId: this.currentUserId });
   
-    // Vérifier la validité du formulaire après la mise à jour
     if (this.placeForm.invalid) {
-      console.log('Form Values:', this.placeForm.value); // Afficher les valeurs du formulaire
-      console.log('Form Validity:', this.placeForm.valid); // Afficher l'état de validation
-      console.log('Form Errors:', this.placeForm.errors); // Afficher les erreurs du formulaire
+      console.log('Form Values:', this.placeForm.value); 
+      console.log('Form Validity:', this.placeForm.valid);
+      console.log('Form Errors:', this.placeForm.errors); 
       return;
     }
   
-    // Envoyer les données au backend
     const formData = new FormData();
     const placeData = this.placeForm.value;
   
-    // Append place data as a JSON string
     formData.append('place', JSON.stringify(placeData));
   
-    // Append images to FormData
     this.selectedImages.forEach((image, index) => {
       formData.append(`images`, image.file, image.file.name);
     });
   
     if (placeData.id) {
-      // Update existing place
       this.placeService.updatePlace(placeData.id, formData).subscribe(() => {
         this.resetForm();
       });
     } else {
-      // Create new place
       this.placeService.createPlace(formData).subscribe((place) => {
         this.places.push(place);
         this.resetForm();
@@ -143,8 +152,15 @@ export class PlaceManagementComponent implements OnInit {
   getPlaces() {
     this.placeService.getAllPlaces().subscribe(data => {
       this.places = data;
-      // this.pic = data.images;
-      // console.log(data [9].images);
+      console.log(this.places.forEach((place)=>{
+        if (place.user && place.user.profilePicture) {
+          console.log(place.user.profilePicture); 
+        } else {
+          console.log('Aucune photo de profil trouvée pour cet utilisateur.');
+        }
+      }));
+
+
 
     });
   }

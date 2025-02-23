@@ -1,0 +1,88 @@
+  <div class=" p-5">
+    <h3 class="text-xl font-semibold mb-4 text-gray-800">Commentaires</h3>
+  
+    <button
+      *ngIf="!isEditing"
+      (click)="isEditing = true"
+      class="mb-6 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all"
+    >
+      Ajouter un commentaire
+    </button>
+  
+    <form
+      *ngIf="isEditing"
+      [formGroup]="reviewForm"
+      (ngSubmit)="onSubmit()"
+      class="mb-6"
+    >
+      <textarea
+        formControlName="comment"
+        class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+        placeholder="Écrire un commentaire..."
+        rows="3"
+      ></textarea>
+      <div class="flex items-center mt-3">
+        <input
+          type="number"
+          formControlName="rating"
+          class="w-44 p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+          placeholder="Note (1-5)"
+          min="1"
+          max="5"
+        />
+        <button
+          type="submit"
+          class="ml-3 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-all"
+        >
+          {{ currentReviewId ? 'Modifier' : 'Publier' }}
+        </button>
+        <button
+          type="button"
+          (click)="resetForm()"
+          class="ml-2 bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600 transition-all"
+        >
+          Annuler
+        </button>
+      </div>
+    </form>
+  
+    <div *ngIf="reviews.length === 0" class="text-gray-500">
+      Soyez le premier à laisser un commentaire !
+    </div>
+  
+    <div class="space-y-4">
+      <div
+        *ngFor="let review of reviews"
+        class="p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-shadow"
+      >
+        <div class="flex items-center mb-3">
+          <img
+            [src]="review.user?.profilePicture"
+            alt="Photo de profil"
+            class="w-10 h-10 rounded-full object-cover"
+          />
+          <div class="ml-3">
+            <span class="font-semibold text-gray-800">{{ review.user?.username }}</span>
+          </div>
+        </div>
+        <p class="text-gray-700">{{ review.comment }}</p>
+        <div class="flex items-center mt-3">
+          <span class="text-yellow-500">⭐ {{ review.rating }}</span>
+          <div *ngIf="review.user?.id === userId" class="ml-auto flex space-x-3">
+            <button
+              (click)="onEdit(review)"
+              class="text-blue-500 hover:text-blue-600 transition-all"
+            >
+              ✏️ Modifier
+            </button>
+            <button
+              (click)="onDelete(review.id)"
+              class="text-red-500 hover:text-red-600 transition-all"
+            >
+              🗑️ Supprimer
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

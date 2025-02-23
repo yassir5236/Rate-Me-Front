@@ -72,7 +72,8 @@ export interface Place {
     name: string;
     email: string;
     description: string;
-    
+    profilePicture:string
+
   }
 }
 @Injectable({
