@@ -27,7 +27,7 @@ export class ReviewComponent implements OnInit {
   ) {
     this.reviewForm = this.fb.group({
       comment: ['', Validators.required],
-      rating: [null, [Validators.required, Validators.min(1), Validators.max(5)]],
+      rating: [null, [ Validators.min(1), Validators.max(5)]],
     });
   }
 
