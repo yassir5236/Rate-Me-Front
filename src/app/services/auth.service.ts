@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { jwtDecode } from 'jwt-decode';
 import { Router } from '@angular/router';
 
-import { tap } from 'rxjs/operators';  // ✅ Import ajouté
+import { tap } from 'rxjs/operators'; 
 
 
 @Injectable({
@@ -22,9 +22,7 @@ export class AuthService {
  
 
 
-  // private hasToken(): boolean {
-  //   return !!localStorage.getItem('token');
-  // }
+
 
   private hasToken(): boolean {
     const token = localStorage.getItem('token');
@@ -42,18 +40,19 @@ export class AuthService {
     return this.http.post(`${this.apiUrl}/register`, user);
   }
 
-  // login(user: any): Observable<any> {
-  //   return this.http.post<{ token: string }>(`${this.apiUrl}/login`, user);
-  // }
+
 
   login(user: any): Observable<any> {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, user).pipe(
-      tap((response) => {
+  return this.http.post<{ token: string }>(`${this.apiUrl}/login`, user).pipe(
+    tap((response) => {
+      if (response.token) {  
         localStorage.setItem('token', response.token);
-        this.isAuthenticated.next(true);  // ✅ Met à jour l'état après connexion
-      })
-    );
-  }
+        this.isAuthenticated.next(true);  
+      }
+    })
+  );
+}
+
   
 
 

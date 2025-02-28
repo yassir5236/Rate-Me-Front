@@ -69,7 +69,7 @@ export interface Place {
   };
   user:{
     id: number;
-    name: string;
+    username: string;
     email: string;
     description: string;
     profilePicture:string

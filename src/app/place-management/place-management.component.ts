@@ -1,11 +1,18 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit, HostListener } from '@angular/core';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Place, PlaceService } from '../services/place.service';
 import { Category, CategoryService } from '../services/category.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../services/user.service';
 import { ReviewComponent } from '../review/review.component';
+import { FormsModule } from '@angular/forms'; // <-- Add this import
+import { Router } from '@angular/router';
 
 interface ImageFile {
   file: File;
@@ -14,59 +21,117 @@ interface ImageFile {
 
 @Component({
   selector: 'app-place-management',
-  imports: [CommonModule, ReactiveFormsModule ,ReviewComponent ],
+  imports: [CommonModule, ReactiveFormsModule, ReviewComponent, FormsModule],
   templateUrl: './place-management.component.html',
-  styleUrls: ['./place-management.component.css']
+  styleUrls: ['./place-management.component.css'],
 })
 export class PlaceManagementComponent implements OnInit {
-  selectedImages: ImageFile[] = []; 
+  selectedImages: ImageFile[] = [];
   places: Place[] = [];
   categories: Category[] = [];
-  currentUserId: string | null = null; 
-  currentUserId2: number | null = null; 
-  showReviewForPlaceId: number = -1; 
 
+  currentUserId: string | null = null;
+  currentUserId2: number | null = null;
+  showReviewForPlaceId: number = -1;
+  currentUserName: string | null = null;
 
-  profilePicture : string | null = null;
+  profilePicture: string | null = null;
   placeForm!: FormGroup;
   showForm = false;
-  pic:string []=[];
+  pic: string[] = [];
+  isDropdownOpen: boolean = false; // Track dropdown visibility
 
+  filteredPlaces: Place[] = []; // For displaying search results
+  searchQuery: string = '';
+  selectedCategory: Category | null = null;
   constructor(
     private fb: FormBuilder,
     private placeService: PlaceService,
     private categoryService: CategoryService,
-    private userService :UserService,
-    private sanitizer: DomSanitizer
+    private userService: UserService,
+    private sanitizer: DomSanitizer,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.getPlaces();
     this.getCategories();
     this.initForm();
-    this.getCurrentUser(); 
+    this.getCurrentUser();
+    this.searchPlaces(); // Call searchPlaces to initialize filteredPlaces
 
-    this.placeService.getAllPlaces().subscribe(data=>{
+    this.placeService.getAllPlaces().subscribe((data) => {
       // this.selectedImages = data.push
-    })
+    });
   }
 
+  toggleDropdown(): void {
+    this.isDropdownOpen = !this.isDropdownOpen;
+  }
+
+  // Search functionality
+  // Real-time search functionality
+  searchPlaces(): void {
+    this.filteredPlaces = this.places.filter((place) => {
+      const matchesName = place.name
+        .toLowerCase()
+        .includes(this.searchQuery.toLowerCase());
+      const matchesDescription = place.description
+        ?.toLowerCase()
+        .includes(this.searchQuery.toLowerCase());
+      const matchesCategory = this.selectedCategory
+        ? place.category.id === this.selectedCategory.id
+        : true;
+
+      return (matchesName || matchesDescription) && matchesCategory;
+    });
+  }
+
+  // Select category from dropdown
+  selectCategory(category: Category | null): void {
+    this.selectedCategory = category;
+    this.isDropdownOpen = false; // Close dropdown on selection
+    // this.isDropdownOpen=true;
+    this.searchPlaces();
+  }
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const target = event.target as HTMLElement;
+    const dropdownButton = document.getElementById('dropdown-button');
+    const dropdownMenu = document.getElementById('dropdown');
+
+    // Check if the click is outside both the button and the dropdown menu
+    if (
+      this.isDropdownOpen &&
+      dropdownButton &&
+      dropdownMenu &&
+      !dropdownButton.contains(target) &&
+      !dropdownMenu.contains(target)
+    ) {
+      this.isDropdownOpen = false;
+    }
+  }
+
+  resetSearch(): void {
+    this.searchQuery = '';
+    this.selectedCategory = null;
+    this.filteredPlaces = this.places; 
+  }
 
 
   toggleReviewSection(placeId: number | null | undefined): void {
     if (!placeId) {
       console.error("L'ID du lieu est invalide ou manquant.");
-      return; 
+      return;
     }
-  
+
     if (this.showReviewForPlaceId === placeId) {
-      this.showReviewForPlaceId = -1; 
+      this.showReviewForPlaceId = -1;
     } else {
-      this.showReviewForPlaceId = placeId; 
+      this.showReviewForPlaceId = placeId;
     }
   }
-
-
 
   initForm() {
     this.placeForm = this.fb.group({
@@ -78,7 +143,7 @@ export class PlaceManagementComponent implements OnInit {
       longitude: [null],
       averageRating: [null],
       categoryId: [null, Validators.required],
-      userId: [null, Validators.required]
+      userId: [null, Validators.required],
     });
   }
 
@@ -87,7 +152,7 @@ export class PlaceManagementComponent implements OnInit {
     if (files && files.length > 0) {
       for (let i = 0; i < files.length; i++) {
         const file = files[i];
-        if (file.size > 5 * 1024 * 1024) { 
+        if (file.size > 5 * 1024 * 1024) {
           alert(`La taille du fichier "${file.name}" ne doit pas dépasser 5MB`);
           continue;
         }
@@ -96,7 +161,7 @@ export class PlaceManagementComponent implements OnInit {
         reader.onload = () => {
           this.selectedImages.push({
             file,
-            url: this.sanitizer.bypassSecurityTrustUrl(reader.result as string)
+            url: this.sanitizer.bypassSecurityTrustUrl(reader.result as string),
           });
         };
       }
@@ -104,7 +169,7 @@ export class PlaceManagementComponent implements OnInit {
   }
 
   removeImage(image: ImageFile): void {
-    this.selectedImages = this.selectedImages.filter(img => img !== image);
+    this.selectedImages = this.selectedImages.filter((img) => img !== image);
   }
 
   savePlace(): void {
@@ -112,25 +177,25 @@ export class PlaceManagementComponent implements OnInit {
       console.error('User ID is missing. Cannot save place.');
       return;
     }
-  
+
     this.placeForm.patchValue({ userId: this.currentUserId });
-  
+
     if (this.placeForm.invalid) {
-      console.log('Form Values:', this.placeForm.value); 
+      console.log('Form Values:', this.placeForm.value);
       console.log('Form Validity:', this.placeForm.valid);
-      console.log('Form Errors:', this.placeForm.errors); 
+      console.log('Form Errors:', this.placeForm.errors);
       return;
     }
-  
+
     const formData = new FormData();
     const placeData = this.placeForm.value;
-  
+
     formData.append('place', JSON.stringify(placeData));
-  
+
     this.selectedImages.forEach((image, index) => {
       formData.append(`images`, image.file, image.file.name);
     });
-  
+
     if (placeData.id) {
       this.placeService.updatePlace(placeData.id, formData).subscribe(() => {
         this.resetForm();
@@ -149,19 +214,20 @@ export class PlaceManagementComponent implements OnInit {
     this.showForm = false;
   }
 
+
   getPlaces() {
-    this.placeService.getAllPlaces().subscribe(data => {
+    this.placeService.getAllPlaces().subscribe((data) => {
       this.places = data;
-      console.log(this.places.forEach((place)=>{
-        if (place.user && place.user.profilePicture) {
-          console.log(place.user.profilePicture); 
-        } else {
-          console.log('Aucune photo de profil trouvée pour cet utilisateur.');
-        }
-      }));
-
-
-
+      this.filteredPlaces = data;
+      
+      console.log(
+        this.places.forEach((place) => {
+          if (place.user && place.user.profilePicture) {
+          } else {
+            console.log('Aucune photo de profil trouvée pour cet utilisateur.');
+          }
+        })
+      );
     });
   }
 
@@ -169,32 +235,38 @@ export class PlaceManagementComponent implements OnInit {
     this.userService.getUserProfile().subscribe({
       next: (data) => {
         try {
-          this.currentUserId = data.id; 
-          this.currentUserId2 =data.id; 
-          this.profilePicture=data.profilePicture
-          console.log("User ID:", this.currentUserId);
+          this.currentUserId = data.id;
+          this.currentUserId2 = data.id;
+          this.currentUserName = data.username;
+          this.profilePicture = data.profilePicture;
         } catch (error) {
           console.error("Erreur lors de l'analyse du JSON:", error);
         }
       },
       error: (err) => {
-        console.error("Erreur HTTP:", err);
-      }
+        console.error('Erreur HTTP:', err);
+      },
     });
   }
-  
+
+
+  ToUserData(userId: number |undefined) {
+    this.router.navigate(['/selectedUser', userId]); // Pass the user ID as a route parameter
+  }
 
   getCategories() {
-    this.categoryService.getAllCategories().subscribe(data => {
-      this.categories = data;
-      console.log(data);
-    });
+    this.categoryService.getAllCategories().subscribe(
+      (data) => {
+        this.categories = data;
+        console.log('Categories Data:', data); // Log the data to verify its structure
+      },
+      (error) => {
+        console.error('Error fetching categories:', error); // Log any errors
+      }
+    );
   }
 
-
-
   openForm(place: Place | null = null) {
-    
     if (place) {
       this.placeForm.patchValue({
         id: place.id,
@@ -204,9 +276,8 @@ export class PlaceManagementComponent implements OnInit {
         latitude: place.latitude,
         longitude: place.longitude,
         averageRating: place.averageRating,
-        categoryId: place.category.id
-        
-            });
+        categoryId: place.category.id,
+      });
     } else {
       this.placeForm.reset({
         id: null,
@@ -216,7 +287,7 @@ export class PlaceManagementComponent implements OnInit {
         latitude: null,
         longitude: null,
         averageRating: null,
-        categoryId: null
+        categoryId: null,
       });
     }
     this.showForm = true;
@@ -233,17 +304,14 @@ export class PlaceManagementComponent implements OnInit {
   }
 
   showGallery = false;
-currentGallery: string[] = [];
+  currentGallery: string[] = [];
 
-openGallery(images?: { path: string }[]) {
-  this.currentGallery = images?.map(img => img.path) ?? [];
-  this.showGallery = true;
-}
+  openGallery(images?: { path: string }[]) {
+    this.currentGallery = images?.map((img) => img.path) ?? [];
+    this.showGallery = true;
+  }
 
-
-closeGallery() {
-  this.showGallery = false;
-}
-
-
+  closeGallery() {
+    this.showGallery = false;
+  }
 }

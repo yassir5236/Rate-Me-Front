@@ -10,12 +10,6 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  // getUserProfile(): Observable<any> {
-  //   const headers = new HttpHeaders({
-  //     Authorization: `Bearer ${localStorage.getItem('token')}`
-  //   });
-  //   return this.http.get(`${this.apiUrl}/me`, { headers });
-  // }
 
 
   getUserProfile(): Observable<any> {
@@ -39,6 +33,18 @@ export class UserService {
     return this.http.put(`${this.apiUrl}/update`, formData, { headers });
   }
 
-
+  getUserById(userId: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    console.log('im herzeeeeee');
+    if (!token) {
+      throw new Error('Token not found');
+    }
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  
+    return this.http.get(`${this.apiUrl}/${userId}`, { headers });
+  }
   
 }

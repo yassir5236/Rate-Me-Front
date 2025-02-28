@@ -7,6 +7,7 @@ import { RegisterComponent } from './register/register.component';
 import { HomeComponent } from './shared/home/home.component';
 import { TestComponent } from './test/test/test.component';
 import { PlaceManagementComponent } from './place-management/place-management.component';
+import { SelectedUserComponent } from './selected-user/selected-user.component';
 
 export const routes: Routes = [
     { path: '', pathMatch: 'full', component: HomeComponent },
@@ -17,5 +18,6 @@ export const routes: Routes = [
     {path : 'dashboard',component: DashboardComponent},
     {path : 'category',component: CategoryComponent},
     {path:'places',component:PlaceManagementComponent},
+    {path:'selectedUser/:userId' ,component: SelectedUserComponent}
   
 ];
