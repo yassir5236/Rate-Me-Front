@@ -13,6 +13,9 @@ import { UserService } from '../services/user.service';
 import { ReviewComponent } from '../review/review.component';
 import { FormsModule } from '@angular/forms'; // <-- Add this import
 import { Router } from '@angular/router';
+import { ShareService } from '../services/share.service';
+import { ShareRequestDTO } from '../models/share.model';
+import { SharePopupComponent } from "../share-popup/share-popup.component";
 
 interface ImageFile {
   file: File;
@@ -21,8 +24,8 @@ interface ImageFile {
 
 @Component({
   selector: 'app-place-management',
-  imports: [CommonModule, ReactiveFormsModule, ReviewComponent, FormsModule],
-  templateUrl: './place-management.component.html',
+  imports: [CommonModule, ReactiveFormsModule, ReviewComponent, FormsModule, SharePopupComponent],
+templateUrl: './place-management.component.html',
   styleUrls: ['./place-management.component.css'],
 })
 export class PlaceManagementComponent implements OnInit {
@@ -44,14 +47,49 @@ export class PlaceManagementComponent implements OnInit {
   filteredPlaces: Place[] = []; // For displaying search results
   searchQuery: string = '';
   selectedCategory: Category | null = null;
+
+  showSharePopup: boolean = false; // Control popup visibility
+  selectedPlace: Place | null = null; // Store the selected place for sharing
+
   constructor(
     private fb: FormBuilder,
     private placeService: PlaceService,
     private categoryService: CategoryService,
     private userService: UserService,
     private sanitizer: DomSanitizer,
-    private router: Router
+    private router: Router,
+    private shareService: ShareService // Add the ShareService to the constructor
   ) {}
+
+  openSharePopup(place: Place): void {
+    this.selectedPlace = place;
+    this.showSharePopup = true;
+  }
+
+  onSharePlace(title: string): void {
+    if (this.selectedPlace) {
+      const shareRequest: ShareRequestDTO = {
+        userId: this.currentUserId ? Number(this.currentUserId) : 0, // Convert to number, use 0 as fallback
+        placeId: this.selectedPlace.id,
+        title: title || '', // Use the provided title or an empty string
+      };
+  
+      this.shareService.createShare(shareRequest).subscribe(
+        (response) => {
+          console.log('Place shared successfully:', response);
+          this.showSharePopup = false; // Close the popup
+        },
+        (error) => {
+          console.error('Error sharing place:', error);
+        }
+      );
+    }
+  }
+  
+
+  onCancelShare(): void {
+    this.showSharePopup = false; // Close the popup
+  }
 
   ngOnInit(): void {
     this.getPlaces();

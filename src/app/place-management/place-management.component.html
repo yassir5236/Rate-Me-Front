@@ -1,4 +1,3 @@
-
 <div class="max-w-6xl mx-auto p-8 rounded-lg shadow-xl">
   <h2 class="text-3xl font-semibold text-gray-800 mb-6">Gestion des Lieux</h2>
 
@@ -9,8 +8,6 @@
     >
       ➕ Ajouter un lieu
     </button>
-
-   
 
     <form class="max-w-lg mx-auto mb-5" (ngSubmit)="searchPlaces()" #searchForm>
       <div class="flex relative">
@@ -23,7 +20,7 @@
           [attr.aria-expanded]="isDropdownOpen"
           aria-haspopup="true"
         >
-          {{ selectedCategory?.name || 'All categories' }}
+          {{ selectedCategory?.name || "All categories" }}
           <svg
             class="w-2.5 h-2.5 ms-2.5 transition-transform duration-200"
             [class.rotate-180]="isDropdownOpen"
@@ -41,7 +38,7 @@
             />
           </svg>
         </button>
-    
+
         <!-- Dropdown Menu -->
         <div
           id="dropdown"
@@ -73,7 +70,7 @@
             </li>
           </ul>
         </div>
-    
+
         <!-- Search Input -->
         <div class="relative flex-1">
           <input
@@ -81,13 +78,13 @@
             [(ngModel)]="searchQuery"
             (input)="searchPlaces()"
             name="searchQuery"
-            class="block w-full p-2.5 text-sm text-gray-900 rounded-e-lg  border border-gray-300 focus:ring-orange-500 focus:border-orange-500"
+            class="block w-full p-2.5 text-sm text-gray-900 rounded-e-lg border border-gray-300 focus:ring-orange-500 focus:border-orange-500"
             placeholder="Search by name, category, or description..."
             aria-label="Search places"
           />
           <button
             type="submit"
-            class="absolute top-0 end-0 p-2.5 h-full text-sm font-medium text-white bg-[#f59e42] rounded-e-lg border  hover:bg-orange-700 focus:ring-4 focus:ring-orange-200"
+            class="absolute top-0 end-0 p-2.5 h-full text-sm font-medium text-white bg-[#f59e42] rounded-e-lg border hover:bg-orange-700 focus:ring-4 focus:ring-orange-200"
           >
             <svg
               class="w-4 h-4"
@@ -298,19 +295,16 @@
       >
         <div class="p-4 flex items-center space-x-3 border-b border-gray-200">
           <button (click)="ToUserData(place.user?.id)">
-
-          <img
-            [src]="place.user?.profilePicture"
-            alt="Profile Picture"
-            class="h-10 w-10 rounded-full object-cover"
-          />
-        </button>
+            <img
+              [src]="place.user?.profilePicture"
+              alt="Profile Picture"
+              class="h-10 w-10 rounded-full object-cover"
+            />
+          </button>
 
           <div>
             <h4 class="text-sm font-semibold text-gray-900">
-             
               {{ place.user?.username }}
-              
             </h4>
             <p class="text-xs text-gray-500">2 hours ago</p>
           </div>
@@ -397,8 +391,14 @@
                 </svg>
                 <span class="ml-2">Comment</span>
               </button>
+              <app-share-popup
+                *ngIf="showSharePopup"
+                (share)="onSharePlace($event)"
+                (cancel)="onCancelShare()"
+              ></app-share-popup>
               <button
                 class="flex items-center text-gray-500 hover:text-purple-500"
+                (click)="openSharePopup(place)"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

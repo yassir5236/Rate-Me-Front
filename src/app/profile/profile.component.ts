@@ -4,10 +4,13 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer } from '@angular/platform-browser';
+import { ShareService } from '../services/share.service';
+import { Router } from '@angular/router';
+import { ReviewComponent } from '../review/review.component';
 
 @Component({
   selector: 'app-profile',
-  imports: [ReactiveFormsModule,CommonModule],
+  imports: [ReactiveFormsModule,CommonModule,ReviewComponent],
   templateUrl: './profile.component.html',
   styleUrl: './profile.component.css'
 })
@@ -18,9 +21,23 @@ export class ProfileComponent implements OnInit {
   profileImage: string | null = null;
   file!: File;
   userName : string='';
+  sharedPlaces: any[] = []; // Array to store shared places
+  
 
 
-  constructor(private userService: UserService, private fb: FormBuilder,    private sanitizer: DomSanitizer
+  showGallery = false;
+  currentGallery: string[] = [];
+  
+    currentUserId: string | null = null;
+    currentUserId2: number | null = null;
+    showReviewForPlaceId: number = -1;
+    currentUserName: string | null = null;
+  
+
+  
+
+  constructor(private userService: UserService, private fb: FormBuilder, 
+     private sanitizer: DomSanitizer , private shareService :ShareService,private router: Router
 ) {}
 
   ngOnInit(): void {
@@ -36,7 +53,17 @@ export class ProfileComponent implements OnInit {
         this.profileForm.patchValue(data);
         this.profileImage = data.profilePicture;
         this.userName=data.username;
-        console.log(data)
+
+        this.shareService.getSharesByUserId(data.id).subscribe(
+          (shares) => {
+            this.sharedPlaces = shares;
+            console.log('Shared Places:', this.sharedPlaces);
+          },
+          (error) => {
+            console.error('Error fetching shared places:', error);
+          }
+        );
+  
     
 
         if (!data.location || !data.profilePicture || !data.bio) {
@@ -82,4 +109,54 @@ export class ProfileComponent implements OnInit {
           }
         );
       }
-    }}
+    }
+  
+  
+    toggleReviewSection(placeId: number | null | undefined): void {
+      if (!placeId) {
+        console.error("L'ID du lieu est invalide ou manquant.");
+        return;
+      }
+  
+      if (this.showReviewForPlaceId === placeId) {
+        this.showReviewForPlaceId = -1;
+        
+      } else {
+        this.showReviewForPlaceId = placeId;
+      }
+    }
+
+
+    openGallery(images?: { path: string }[]) {
+      this.currentGallery = images?.map((img) => img.path) ?? [];
+      this.showGallery = true;
+    }
+  
+    
+  ToUserData(userId: number |undefined) {
+    this.router.navigate(['/selectedUser', userId]); // Pass the user ID as a route parameter
+  }
+  
+  
+  
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
