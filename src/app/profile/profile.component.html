@@ -1,7 +1,6 @@
-
-
-
-<div class="px-6 py-12 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen">
+<div
+  class="px-6 py-12 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen"
+>
   <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-2xl overflow-hidden">
     <!-- Profile Header -->
     <div class="relative">
@@ -11,23 +10,38 @@
       <div class="absolute -bottom-20 left-1/2 transform -translate-x-1/2">
         <div class="flex items-center space-x-4">
           <div class="relative">
-            <img 
-              [src]="profileImage || 'assets/pexels-simonmigaj-951076.jpg'" 
+            <img
+              [src]="profileImage || 'assets/pexels-simonmigaj-951076.jpg'"
               class="h-40 w-40 rounded-full border-4 border-white shadow-lg"
-            >
-            <label 
+            />
+            <label
               class="absolute bottom-0 right-0 bg-white rounded-full p-1 shadow-md cursor-pointer"
               title="Changer la photo"
             >
-              <input 
-                type="file" 
-                accept="image/*" 
+              <input
+                type="file"
+                accept="image/*"
                 class="hidden"
                 (change)="onFileSelected($event)"
+              />
+              <svg
+                class="w-6 h-6 text-[#f7990b]"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
               >
-              <svg class="w-6 h-6 text-[#f7990b]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/>
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/>
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                />
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
             </label>
           </div>
@@ -38,10 +52,10 @@
     <!-- Profile Content -->
     <div class="px-6 pt-24 pb-8 text-center">
       <!-- Name and Location -->
-      <h1 class="text-4xl font-bold text-gray-800 mb-2">{{userName}}</h1>
+      <h1 class="text-4xl font-bold text-gray-800 mb-2">{{ userName }}</h1>
       <p class="text-lg text-gray-600 font-semibold mb-6">
         <i class="fas fa-map-marker-alt text-[#f7990b] mr-2"></i>
-        {{ profileForm.get('location')?.value || 'Los Angeles, California' }}
+        {{ profileForm.get("location")?.value || "Los Angeles, California" }}
       </p>
 
       <!-- Stats -->
@@ -80,228 +94,218 @@
           University of Computer Science
         </p>
       </div>
-    </div>
 
+      <!-- Bio Section -->
+      <div class="border-t border-gray-200 py-8 px-6">
+        <div class="max-w-2xl mx-auto text-center">
+          <p class="text-lg text-gray-700 leading-relaxed">
+            {{
+              profileForm.get("bio")?.value ||
+                "An artist of considerable range, Jenna—the name taken by Melbourne-raised, Brooklyn-based Nick Murphy—writes, performs, and records all of his own music, giving it a warm, intimate feel with a solid groove structure. An artist of considerable range."
+            }}
+          </p>
+          <a
+            href="#"
+            class="inline-block mt-4 text-[#f7990b] hover:text-[#f89f73] font-semibold transition-all duration-300"
+          >
+            Show more
+          </a>
+        </div>
+      </div>
 
+      <!-- Edit Form -->
+      <div *ngIf="isEditing" class="px-6 py-8 border-t border-gray-200">
+        <h2 class="text-2xl font-bold text-gray-800 mb-6">
+          Modifier le Profil
+        </h2>
+        <form [formGroup]="profileForm">
+          <!-- Nouveau champ pour l'upload de photo -->
 
-    <!-- Bio Section -->
-    <div class="border-t border-gray-200 py-8 px-6">
-      <div class="max-w-2xl mx-auto text-center">
-        <p class="text-lg text-gray-700 leading-relaxed">
-          {{ profileForm.get('bio')?.value || 'An artist of considerable range, Jenna—the name taken by Melbourne-raised, Brooklyn-based Nick Murphy—writes, performs, and records all of his own music, giving it a warm, intimate feel with a solid groove structure. An artist of considerable range.' }}
-        </p>
-        <a
-          href="#"
-          class="inline-block mt-4 text-[#f7990b] hover:text-[#f89f73] font-semibold transition-all duration-300"
-        >
-          Show more
-        </a>
+          <div class="mb-4">
+            <label class="block text-gray-700 font-semibold mb-2">Lieu:</label>
+            <input
+              type="text"
+              formControlName="location"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f7990b]"
+            />
+          </div>
+
+          <div class="mb-6">
+            <label class="block text-gray-700 font-semibold mb-2">Bio:</label>
+            <textarea
+              formControlName="bio"
+              class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f7990b]"
+              rows="4"
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end space-x-4">
+            <button
+              type="button"
+              (click)="isEditing = false"
+              class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-gray-600 transition-all duration-300"
+            >
+              Annuler
+            </button>
+            <button
+              type="button"
+              (click)="updateProfile()"
+              [disabled]="profileForm.invalid"
+              class="bg-gradient-to-r from-[#f7990b] to-[#ea8f27] text-white font-semibold py-2 px-6 rounded-full hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
+            >
+              Enregistrer
+            </button>
+          </div>
+        </form>
       </div>
     </div>
-
-    <!-- Edit Form -->
-    <div *ngIf="isEditing" class="px-6 py-8 border-t border-gray-200">
-      <h2 class="text-2xl font-bold text-gray-800 mb-6">Modifier le Profil</h2>
-      <form [formGroup]="profileForm">
-        
-     <!-- Nouveau champ pour l'upload de photo -->
-   
-
-    <div class="mb-4">
-      <label class="block text-gray-700 font-semibold mb-2">Lieu:</label>
-      <input
-        type="text"
-        formControlName="location"
-        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f7990b]"
-      />
-    </div>
-
-        <div class="mb-6">
-          <label class="block text-gray-700 font-semibold mb-2">Bio:</label>
-          <textarea
-            formControlName="bio"
-            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#f7990b]"
-            rows="4"
-          ></textarea>
-        </div>
-
-        <div class="flex justify-end space-x-4">
-          <button
-            type="button"
-            (click)="isEditing = false"
-            class="bg-gray-500 text-white font-semibold py-2 px-6 rounded-full hover:bg-gray-600 transition-all duration-300"
-          >
-            Annuler
-          </button>
-          <button
-            type="button"
-            (click)="updateProfile()"
-            [disabled]="profileForm.invalid"
-            class="bg-gradient-to-r from-[#f7990b] to-[#ea8f27] text-white font-semibold py-2 px-6 rounded-full hover:shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-          >
-            Enregistrer
-          </button>
-        </div>
-      </form>
-    </div>
   </div>
-</div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- <div class="border-t border-gray-200 py-8 px-6">
-  <h2 class="text-2xl font-bold text-gray-800 mb-6">Shared Places</h2>
-  <div *ngIf="sharedPlaces.length > 0; else noSharedPlaces">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-8">
-      <div
-        *ngFor="let sharedPlace of sharedPlaces"
-        class="bg-white rounded-lg shadow-lg border border-gray-200"
-      >
-        <div class="p-4 flex items-center space-x-3 border-b border-gray-200">
-          <button (click)="ToUserData(sharedPlace.user?.id)">
-            <img
-              [src]="sharedPlace.user?.profilePicture"
-              alt="Profile Picture"
-              class="h-10 w-10 rounded-full object-cover"
-            />
-          </button>
-
-          <div>
-            <h4 class="text-sm font-semibold text-gray-900">
-              {{ sharedPlace.user?.username }}
-            </h4>
-            <p class="text-xs text-gray-500">2 hours ago</p>
-          </div>
-        </div>
-        <div class="p-4">
-          <p class="text-lg font-medium text-black-500">{{ sharedPlace.title }}</p>
-        </div>
-
-        <div class="p-4 flex items-center space-x-3 border-b border-gray-200">
-          <button (click)="ToUserData(sharedPlace.place.user.id)">
-            <img
-              [src]="sharedPlace.place.user?.profilePicture"
-              alt="Profile Picture"
-              class="h-10 w-10 rounded-full object-cover"
-            />
-          </button>
-
-          <div>
-            <h4 class="text-sm font-semibold text-gray-900">
-              {{ sharedPlace.place.user?.username }}
-            </h4>
-            <p class="text-xs text-gray-500">2 hours ago</p>
-          </div>
-        </div>
-
-        <div class="p-4">
-          <p class="text-lg font-medium text-green-500">#{{ sharedPlace.place.name }}</p>
-          <p class="text-sm text-gray-600">{{ sharedPlace.place.description }}</p>
-        </div>
-
-        <div *ngIf="sharedPlace.place?.images?.length > 0" class="p-4">
-          <div class="grid grid-cols-2 gap-2">
-            <div
-              *ngFor="let image of sharedPlace.place.images.slice(0, 2); let i = index"
-              class="relative cursor-pointer"
-              (click)="openGallery(sharedPlace.place.images)"
-            >
+  <div class="border-t border-gray-200 py-8 px-12">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Shared Places</h2>
+    <div *ngIf="sharedPlaces.length > 0; else noSharedPlaces">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-8">
+        <div
+          *ngFor="let sharedPlace of sharedPlaces"
+          class="bg-white rounded-lg shadow-lg border border-gray-200"
+        >
+          <div class="p-4 flex items-center space-x-3 border-b border-gray-200">
+            <button (click)="ToUserData(sharedPlace.user?.id)">
               <img
-                [src]="image.path"
-                alt="Image de {{ sharedPlace.place.name }}"
-                class="rounded-lg shadow-lg h-64 w-full object-cover"
+                [src]="sharedPlace.user?.profilePicture"
+                alt="Profile Picture"
+                class="h-10 w-10 rounded-full object-cover"
               />
+            </button>
+
+            <div>
+              <h4 class="text-sm font-semibold text-gray-900">
+                {{ sharedPlace.user?.username }}
+              </h4>
+              <p class="text-xs text-gray-500">2 hours ago</p>
+            </div>
+          </div>
+          <div class="p-4">
+            <p class="text-lg font-medium text-black-500">
+              {{ sharedPlace.title }}
+            </p>
+          </div>
+
+          <div class="p-4 flex items-center space-x-3 border-b border-gray-200">
+            <button (click)="ToUserData(sharedPlace.place.user.id)">
+              <img
+                [src]="sharedPlace.place.user?.profilePicture"
+                alt="Profile Picture"
+                class="h-10 w-10 rounded-full object-cover"
+              />
+            </button>
+
+            <div>
+              <h4 class="text-sm font-semibold text-gray-900">
+                {{ sharedPlace.place.user?.username }}
+              </h4>
+              <p class="text-xs text-gray-500">2 hours ago</p>
+            </div>
+          </div>
+
+          <div class="p-4">
+            <p class="text-lg font-medium text-green-500">
+              #{{ sharedPlace.place.name }}
+            </p>
+            <p class="text-sm text-gray-600">
+              {{ sharedPlace.place.description }}
+            </p>
+          </div>
+
+          <div *ngIf="sharedPlace.place?.images?.length > 0" class="p-4">
+            <div class="grid grid-cols-2 gap-2">
               <div
-                *ngIf="i === 1 && sharedPlace.images?.length > 2"
-                class="absolute inset-0 bg-black-10 flex items-center justify-center rounded-lg"
+                *ngFor="
+                  let image of sharedPlace.place.images.slice(0, 2);
+                  let i = index
+                "
+                class="relative cursor-pointer"
+                (click)="openGallery(sharedPlace.place.images)"
               >
-                <span
-                  class="text-black text-2xl font-bold bg-white p-2 rounded-full"
+                <img
+                  [src]="image.path"
+                  alt="Image de {{ sharedPlace.place.name }}"
+                  class="rounded-lg shadow-lg h-64 w-full object-cover"
+                />
+                <div
+                  *ngIf="i === 1 && sharedPlace.images?.length > 2"
+                  class="absolute inset-0 bg-black-10 flex items-center justify-center rounded-lg"
                 >
-                  +{{ sharedPlace.images?.length - 2 }}
-                </span>
+                  <span
+                    class="text-black text-2xl font-bold bg-white p-2 rounded-full"
+                  >
+                    +{{ sharedPlace.images?.length - 2 }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
-        </div> 
 
-        <p
-        *ngIf="!sharedPlace.place?.images || sharedPlace.place.images?.length === 0"
-        class="text-gray-500 p-4"
-        >
-          Aucune image disponible
-        </p>
-
-        <div *ngIf="showReviewForPlaceId === sharedPlace.place.id" class="mt-6 p-10">
-          <app-review [placeId]="sharedPlace.place.id"></app-review>
-        </div>
-
-        <div class="p-4 border-t border-gray-200">
-          <p class="text-sm text-gray-500 mb-2">
-             Catégories: {{ sharedPlace.place.category?.name }}
+          <p
+            *ngIf="
+              !sharedPlace.place?.images ||
+              sharedPlace.place.images?.length === 0
+            "
+            class="text-gray-500 p-4"
+          >
+            Aucune image disponible
           </p>
-          <div class="flex justify-between items-center">
-            <div class="flex space-x-4">
-              <button
-                class="flex items-center text-gray-500 hover:text-blue-500"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"
-                  />
-                </svg>
-                <span class="ml-2">Liked</span>
-              </button>
-              <button
-                class="flex items-center text-gray-500 hover:text-green-500"
-                (click)="toggleReviewSection(sharedPlace.place?.id)"
-                [disabled]="!sharedPlace.place.id"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123A7 7 0 012 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
-                    clip-rule="evenodd"
-                  />
-                </svg>
-                <span class="ml-2">Comment</span>
-              </button>
-            </div>
 
-            <!-- @if(currentUserId2 === place.user?.id) {
+          <div
+            *ngIf="showReviewForPlaceId === sharedPlace.place.id"
+            class="mt-6 p-10"
+          >
+            <app-review [placeId]="sharedPlace.place.id"></app-review>
+          </div>
+
+          <div class="p-4 border-t border-gray-200">
+            <p class="text-sm text-gray-500 mb-2">
+              Catégories: {{ sharedPlace.place.category?.name }}
+            </p>
+            <div class="flex justify-between items-center">
+              <div class="flex space-x-4">
+                <button
+                  class="flex items-center text-gray-500 hover:text-blue-500"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"
+                    />
+                  </svg>
+                  <span class="ml-2">Liked</span>
+                </button>
+                <button
+                  class="flex items-center text-gray-500 hover:text-green-500"
+                  (click)="toggleReviewSection(sharedPlace.place?.id)"
+                  [disabled]="!sharedPlace.place.id"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123A7 7 0 012 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <span class="ml-2">Comment</span>
+                </button>
+              </div>
+
+              <!-- @if(currentUserId2 === place.user?.id) {
             <div class="flex space-x-2">
               <button
                 (click)="openForm(place)"
@@ -317,14 +321,13 @@
               </button>
             </div>
             } -->
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <ng-template #noSharedPlaces>
+      <p class="text-gray-600">No shared places yet.</p>
+    </ng-template>
   </div>
-  <ng-template #noSharedPlaces>
-    <p class="text-gray-600">No shared places yet.</p>
-  </ng-template>
 </div>
-
-

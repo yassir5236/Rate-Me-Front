@@ -42,4 +42,177 @@
       
       </div>
     </div>
-  </div>
+  
+
+
+   
+  <div class="border-t border-gray-200 ">
+    <h2 class="text-2xl font-bold text-gray-800 mb-6">Shared Places</h2>
+    <div *ngIf="sharedPlaces.length > 0; else noSharedPlaces">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-8">
+        <div
+          *ngFor="let sharedPlace of sharedPlaces"
+          class="bg-white rounded-lg shadow-lg border border-gray-200"
+        >
+          <div class="p-4 flex items-center space-x-3 border-b border-gray-200">
+            <button (click)="ToUserData(sharedPlace.user?.id)">
+              <img
+                [src]="sharedPlace.user?.profilePicture"
+                alt="Profile Picture"
+                class="h-10 w-10 rounded-full object-cover"
+              />
+            </button>
+
+            <div>
+              <h4 class="text-sm font-semibold text-gray-900">
+                {{ sharedPlace.user?.username }}
+              </h4>
+              <p class="text-xs text-gray-500">2 hours ago</p>
+            </div>
+          </div>
+          <div class="p-4">
+            <p class="text-lg font-medium text-black-500">
+              {{ sharedPlace.title }}
+            </p>
+          </div>
+
+          <div class="p-4 flex items-center space-x-3 border-b border-gray-200">
+            <button (click)="ToUserData(sharedPlace.place.user.id)">
+              <img
+                [src]="sharedPlace.place.user?.profilePicture"
+                alt="Profile Picture"
+                class="h-10 w-10 rounded-full object-cover"
+              />
+            </button>
+
+            <div>
+              <h4 class="text-sm font-semibold text-gray-900">
+                {{ sharedPlace.place.user?.username }}
+              </h4>
+              <p class="text-xs text-gray-500">2 hours ago</p>
+            </div>
+          </div>
+
+          <div class="p-4">
+            <p class="text-lg font-medium text-green-500">
+              #{{ sharedPlace.place.name }}
+            </p>
+            <p class="text-sm text-gray-600">
+              {{ sharedPlace.place.description }}
+            </p>
+          </div>
+
+          <div *ngIf="sharedPlace.place?.images?.length > 0" class="p-4">
+            <div class="grid grid-cols-2 gap-2">
+              <div
+                *ngFor="
+                  let image of sharedPlace.place.images.slice(0, 2);
+                  let i = index
+                "
+                class="relative cursor-pointer"
+                (click)="openGallery(sharedPlace.place.images)"
+              >
+                <img
+                  [src]="image.path"
+                  alt="Image de {{ sharedPlace.place.name }}"
+                  class="rounded-lg shadow-lg h-64 w-full object-cover"
+                />
+                <div
+                  *ngIf="i === 1 && sharedPlace.images?.length > 2"
+                  class="absolute inset-0 bg-black-10 flex items-center justify-center rounded-lg"
+                >
+                  <span
+                    class="text-black text-2xl font-bold bg-white p-2 rounded-full"
+                  >
+                    +{{ sharedPlace.images?.length - 2 }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <p
+            *ngIf="
+              !sharedPlace.place?.images ||
+              sharedPlace.place.images?.length === 0
+            "
+            class="text-gray-500 p-4"
+          >
+            Aucune image disponible
+          </p>
+
+          <div
+            *ngIf="showReviewForPlaceId === sharedPlace.place.id"
+            class="mt-6 p-10"
+          >
+            <app-review [placeId]="sharedPlace.place.id"></app-review>
+          </div>
+
+          <div class="p-4 border-t border-gray-200">
+            <p class="text-sm text-gray-500 mb-2">
+              Catégories: {{ sharedPlace.place.category?.name }}
+            </p>
+            <div class="flex justify-between items-center">
+              <div class="flex space-x-4">
+                <button
+                  class="flex items-center text-gray-500 hover:text-blue-500"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"
+                    />
+                  </svg>
+                  <span class="ml-2">Liked</span>
+                </button>
+                <button
+                  class="flex items-center text-gray-500 hover:text-green-500"
+                  (click)="toggleReviewSection(sharedPlace.place?.id)"
+                  [disabled]="!sharedPlace.place.id"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-5 w-5"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                  >
+                    <path
+                      fill-rule="evenodd"
+                      d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123A7 7 0 012 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
+                      clip-rule="evenodd"
+                    />
+                  </svg>
+                  <span class="ml-2">Comment</span>
+                </button>
+              </div>
+
+              <!-- @if(currentUserId2 === place.user?.id) {
+            <div class="flex space-x-2">
+              <button
+                (click)="openForm(place)"
+                class="text-gray-500 hover:text-yellow-500"
+              >
+                ✏️
+              </button>
+              <button
+                (click)="place.id && deletePlace(place.id)"
+                class="text-gray-500 hover:text-red-500"
+              >
+                🗑️
+              </button>
+            </div>
+            } -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <ng-template #noSharedPlaces>
+      <p class="text-gray-600">No shared places yet.</p>
+    </ng-template>
+</div>
+
