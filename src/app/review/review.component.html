@@ -39,14 +39,22 @@
       rows="4"
     ></textarea>
     <div class="flex items-center mt-4 space-x-4">
-      <input
-        type="number"
-        formControlName="rating"
-        class="w-32 p-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
-        placeholder="Note (1-5)"
-        min="1"
-        max="5"
-      />
+
+        <ng-container *ngFor="let star of [1, 2, 3, 4, 5]; let i = index">
+          <svg
+            (click)="setRating(star)"
+            [ngClass]="{ 'text-yellow-500': star <= reviewForm.get('rating')?.value, 'text-gray-300': star > reviewForm.get('rating')?.value }"
+            class="w-5 h-5 cursor-pointer transition-transform transform hover:scale-110"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24 24"
+            fill="currentColor"
+          >
+            <path
+              d="M12 17.75l-5.31 3.54c-.75.5-1.69-.22-1.45-1.05l1.39-5.91-4.66-4.05c-.65-.56-.29-1.61.59-1.71l6.12-.53 2.4-5.57c.37-.86 1.61-.86 1.98 0l2.4 5.57 6.12.53c.88.08 1.24 1.15.59 1.71l-4.66 4.05 1.39 5.91c.24.83-.7 1.55-1.45 1.05L12 17.75z"
+            />
+          </svg>
+        </ng-container>
+      
       <button
         type="submit"
         class="bg-[#FA8443] hover:bg-[#fa6843] text-white px-6 py-2 rounded-full transition-all transform hover:scale-105"

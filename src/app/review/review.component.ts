@@ -108,4 +108,10 @@ export class ReviewComponent implements OnInit {
       },
     });
 }
+
+
+setRating(star: number): void {
+  this.reviewForm.patchValue({ rating: star });
+}
+
 }
