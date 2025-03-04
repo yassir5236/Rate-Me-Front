@@ -312,7 +312,9 @@ export class PlaceManagementComponent implements OnInit {
 
 
   ToUserData(userId: number |undefined) {
-    this.router.navigate(['/selectedUser', userId]); 
+    if(this.currentUserRole=='USER'||this.currentUserRole=='ADMIN'){
+          this.router.navigate(['/selectedUser', userId]); 
+    }
   }
 
   getCategories() {

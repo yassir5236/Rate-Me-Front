@@ -35,7 +35,6 @@ export class UserService {
 
   getUserById(userId: number): Observable<any> {
     const token = localStorage.getItem('token');
-    console.log('im herzeeeeee');
     if (!token) {
       throw new Error('Token not found');
     }
