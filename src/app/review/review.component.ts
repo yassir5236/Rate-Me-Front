@@ -19,6 +19,7 @@ export class ReviewComponent implements OnInit {
   isEditing = false; 
   currentReviewId: number | null = null; 
   userId: number = 0;
+  currentUserRole : string |null = null;
 
   constructor(
     private reviewService: ReviewService,
@@ -33,6 +34,7 @@ export class ReviewComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadReviews(); 
+    this.getCurrentUser();
     this.userService.getUserProfile().subscribe((user) => {
       this.userId = user.id; 
     });
@@ -90,4 +92,20 @@ export class ReviewComponent implements OnInit {
     this.isEditing = false;
     this.currentReviewId = null;
   }
+
+  getCurrentUser() {
+    this.userService.getUserProfile().subscribe({
+      next: (data) => {
+        try {
+
+          this.currentUserRole=data.role;
+        } catch (error) {
+          console.error("Erreur lors de l'analyse du JSON:", error);
+        }
+      },
+      error: (err) => {
+        console.error('Erreur HTTP:', err);
+      },
+    });
+}
 }

@@ -11,11 +11,13 @@ import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { CommonModule } from '@angular/common';
 import { UserService } from '../services/user.service';
 import { ReviewComponent } from '../review/review.component';
-import { FormsModule } from '@angular/forms'; // <-- Add this import
+import { FormsModule } from '@angular/forms'; 
 import { Router } from '@angular/router';
 import { ShareService } from '../services/share.service';
 import { ShareRequestDTO } from '../models/share.model';
 import { SharePopupComponent } from "../share-popup/share-popup.component";
+import { ToastrService } from 'ngx-toastr'; 
+
 
 interface ImageFile {
   file: File;
@@ -42,23 +44,26 @@ export class PlaceManagementComponent implements OnInit {
   placeForm!: FormGroup;
   showForm = false;
   pic: string[] = [];
-  isDropdownOpen: boolean = false; // Track dropdown visibility
+  isDropdownOpen: boolean = false; 
 
-  filteredPlaces: Place[] = []; // For displaying search results
+  filteredPlaces: Place[] = []; 
   searchQuery: string = '';
   selectedCategory: Category | null = null;
 
-  showSharePopup: boolean = false; // Control popup visibility
-  selectedPlace: Place | null = null; // Store the selected place for sharing
+  showSharePopup: boolean = false; 
+  selectedPlace: Place | null = null; 
 
-  constructor(
+  currentUserRole: string | null = null;
+
+    constructor(
     private fb: FormBuilder,
     private placeService: PlaceService,
     private categoryService: CategoryService,
     private userService: UserService,
     private sanitizer: DomSanitizer,
     private router: Router,
-    private shareService: ShareService // Add the ShareService to the constructor
+    private shareService: ShareService,
+    private toastr: ToastrService
   ) {}
 
   openSharePopup(place: Place): void {
@@ -69,17 +74,19 @@ export class PlaceManagementComponent implements OnInit {
   onSharePlace(title: string): void {
     if (this.selectedPlace) {
       const shareRequest: ShareRequestDTO = {
-        userId: this.currentUserId ? Number(this.currentUserId) : 0, // Convert to number, use 0 as fallback
+        userId: this.currentUserId ? Number(this.currentUserId) : 0, 
         placeId: this.selectedPlace.id,
-        title: title || '', // Use the provided title or an empty string
+        title: title || '',
       };
   
       this.shareService.createShare(shareRequest).subscribe(
         (response) => {
           console.log('Place shared successfully:', response);
-          this.showSharePopup = false; // Close the popup
+          this.toastr.success("Place shared successfully")
+          this.showSharePopup = false;
         },
         (error) => {
+          this.toastr.error("Wrong when sharing this post")
           console.error('Error sharing place:', error);
         }
       );
@@ -88,7 +95,7 @@ export class PlaceManagementComponent implements OnInit {
   
 
   onCancelShare(): void {
-    this.showSharePopup = false; // Close the popup
+    this.showSharePopup = false; 
   }
 
   ngOnInit(): void {
@@ -96,19 +103,20 @@ export class PlaceManagementComponent implements OnInit {
     this.getCategories();
     this.initForm();
     this.getCurrentUser();
-    this.searchPlaces(); // Call searchPlaces to initialize filteredPlaces
+    this.searchPlaces(); 
+
 
     this.placeService.getAllPlaces().subscribe((data) => {
       // this.selectedImages = data.push
     });
   }
 
+  
   toggleDropdown(): void {
     this.isDropdownOpen = !this.isDropdownOpen;
   }
 
-  // Search functionality
-  // Real-time search functionality
+
   searchPlaces(): void {
     this.filteredPlaces = this.places.filter((place) => {
       const matchesName = place.name
@@ -125,10 +133,9 @@ export class PlaceManagementComponent implements OnInit {
     });
   }
 
-  // Select category from dropdown
   selectCategory(category: Category | null): void {
     this.selectedCategory = category;
-    this.isDropdownOpen = false; // Close dropdown on selection
+    this.isDropdownOpen = false; 
     // this.isDropdownOpen=true;
     this.searchPlaces();
   }
@@ -139,7 +146,6 @@ export class PlaceManagementComponent implements OnInit {
     const dropdownButton = document.getElementById('dropdown-button');
     const dropdownMenu = document.getElementById('dropdown');
 
-    // Check if the click is outside both the button and the dropdown menu
     if (
       this.isDropdownOpen &&
       dropdownButton &&
@@ -210,19 +216,22 @@ export class PlaceManagementComponent implements OnInit {
     this.selectedImages = this.selectedImages.filter((img) => img !== image);
   }
 
+
+
+
   savePlace(): void {
     if (!this.currentUserId) {
-      console.error('User ID is missing. Cannot save place.');
-      return;
+        console.error('User ID is missing. Cannot save place.');
+        return;
     }
 
     this.placeForm.patchValue({ userId: this.currentUserId });
 
     if (this.placeForm.invalid) {
-      console.log('Form Values:', this.placeForm.value);
-      console.log('Form Validity:', this.placeForm.valid);
-      console.log('Form Errors:', this.placeForm.errors);
-      return;
+        console.log('Form Values:', this.placeForm.value);
+        console.log('Form Validity:', this.placeForm.valid);
+        console.log('Form Errors:', this.placeForm.errors);
+        return;
     }
 
     const formData = new FormData();
@@ -231,21 +240,34 @@ export class PlaceManagementComponent implements OnInit {
     formData.append('place', JSON.stringify(placeData));
 
     this.selectedImages.forEach((image, index) => {
-      formData.append(`images`, image.file, image.file.name);
+        formData.append(`images`, image.file, image.file.name);
     });
 
     if (placeData.id) {
-      this.placeService.updatePlace(placeData.id, formData).subscribe(() => {
-        this.resetForm();
-      });
+        this.placeService.updatePlace(placeData.id, formData).subscribe({
+            next: () => {
+                this.toastr.success('Lieu mis à jour avec succès !', 'Succès');
+                this.resetForm();
+            },
+            error: (error) => {
+                console.error('Error updating place:', error);
+                this.toastr.error('Erreur lors de la mise à jour du lieu');
+            }
+        });
     } else {
-      this.placeService.createPlace(formData).subscribe((place) => {
-        this.places.push(place);
-        this.resetForm();
-      });
+        this.placeService.createPlace(formData).subscribe({
+            next: (place) => {
+                this.toastr.success('Lieu créé avec succès !');
+                this.places.push(place);
+                this.resetForm();
+            },
+            error: (error) => {
+                console.error('Error creating place:', error);
+                this.toastr.error('Erreur lors de la création du lieu');
+            }
+        });
     }
-  }
-
+}
   resetForm(): void {
     this.placeForm.reset();
     this.selectedImages = [];
@@ -277,6 +299,7 @@ export class PlaceManagementComponent implements OnInit {
           this.currentUserId2 = data.id;
           this.currentUserName = data.username;
           this.profilePicture = data.profilePicture;
+          this.currentUserRole=data.role;
         } catch (error) {
           console.error("Erreur lors de l'analyse du JSON:", error);
         }
@@ -289,17 +312,17 @@ export class PlaceManagementComponent implements OnInit {
 
 
   ToUserData(userId: number |undefined) {
-    this.router.navigate(['/selectedUser', userId]); // Pass the user ID as a route parameter
+    this.router.navigate(['/selectedUser', userId]); 
   }
 
   getCategories() {
     this.categoryService.getAllCategories().subscribe(
       (data) => {
         this.categories = data;
-        console.log('Categories Data:', data); // Log the data to verify its structure
+        console.log('Categories Data:', data); 
       },
       (error) => {
-        console.error('Error fetching categories:', error); // Log any errors
+        console.error('Error fetching categories:', error);
       }
     );
   }
@@ -336,9 +359,12 @@ export class PlaceManagementComponent implements OnInit {
   }
 
   deletePlace(id: number) {
+
     this.placeService.deletePlace(id).subscribe(() => {
       this.getPlaces();
     });
+    this.toastr.success("the post deteleted successfully");
+
   }
 
   showGallery = false;

@@ -7,6 +7,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { ShareService } from '../services/share.service';
 import { Router } from '@angular/router';
 import { ReviewComponent } from '../review/review.component';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-profile',
@@ -37,7 +38,7 @@ export class ProfileComponent implements OnInit {
   
 
   constructor(private userService: UserService, private fb: FormBuilder, 
-     private sanitizer: DomSanitizer , private shareService :ShareService,private router: Router
+     private sanitizer: DomSanitizer , private shareService :ShareService,private router: Router,private toastr : ToastrService
 ) {}
 
   ngOnInit(): void {
@@ -101,10 +102,14 @@ export class ProfileComponent implements OnInit {
         this.userService.updateUserProfile(formData).subscribe(
           (updatedUser) => {
             this.profileForm.patchValue(updatedUser);
-            this.profileImage = updatedUser.profilePicture; // Mettre à jour l'image
+            this.toastr.success('Profile updated successfully !');
+
+            this.profileImage = updatedUser.profilePicture;
             this.isEditing = false;
           },
           (error) => {
+            this.toastr.error('Wrong inputs!');
+
             console.error('Erreur:', error);
           }
         );
