@@ -1,85 +1,34 @@
 // like.service.ts
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { LikeRequestDTO } from './../models/like.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LikeService {
-  private apiUrl = 'http://localhost:8081/api/likes'; // Remplacez par l'URL de votre backend
+  private apiUrl = 'http://localhost:8081/api/likes';
 
   constructor(private http: HttpClient) {}
 
-  toggleLike(likeRequestDTO: LikeRequestDTO): Observable<any> {
-    return this.http.post<string>(`${this.apiUrl}`, likeRequestDTO);
-  }
-
-
-  sendToggleLikeRequest(likeRequestDTO: LikeRequestDTO): Observable<any> {
-    return this.http.post<string>(`${this.apiUrl}/toggle`, likeRequestDTO);
-}
-  // Vérifier si un utilisateur a liké un lieu
-  hasLiked(userId: number, placeId: number): Observable<boolean> {
-    return this.http.get<boolean>(
-      `${this.apiUrl}/has-liked/${userId}/${placeId}`
+  toggleLike(likeRequestDTO: LikeRequestDTO): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(
+      `${this.apiUrl}/toggle`,
+      likeRequestDTO
     );
   }
 
-  getLikesByUserId(userId: number): Observable<any[]> {
-    return this.http.get<any[]>(`${this.apiUrl}/user/${userId}`);
+  getLikedPlaces(userId: number | null): Observable<number[]> {
+    if (userId === null) {
+      return throwError(() => new Error('User ID cannot be null'));
+    }
+    return this.http.get<number[]>(`${this.apiUrl}/user/${userId}`); // Récupère les places likées pour un utilisateur
+  }
+
+  // like.service.ts
+
+  getLikesCountForEachPlace(): Observable<Map<number, number>> {
+    return this.http.get<Map<number, number>>(`${this.apiUrl}/places/likes`);
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import { Injectable } from '@angular/core';
-// import { HttpClient } from '@angular/common/http';
-// import { Observable, of } from 'rxjs';
-// import { LikeRequestDTO } from './../models/like.model';
-
-// @Injectable({
-//   providedIn: 'root',
-// })
-// export class LikeService {
-//   private apiUrl = 'http://localhost:8081/api/likes'; // Replace with your backend URL
-
-//   constructor(private http: HttpClient) {}
-
-//   // Renamed method to avoid conflict
-//   sendToggleLikeRequest(likeRequestDTO: LikeRequestDTO): Observable<any> {
-//     return this.http.post<string>(`${this.apiUrl}/toggle`, likeRequestDTO);
-//   }
-
-//   // Check if a user has liked a place
-//   hasLiked(userId: number, placeId: number |null): Observable<boolean> {
-//     return this.http.get<boolean>(`${this.apiUrl}/has-liked/${userId}/${placeId}`);
-//   }
-
-//   // Get likes by user ID
-//   getLikesByUserId(userId: number): Observable<any[]> {
-//     return this.http.get<any[]>(`${this.apiUrl}/user/${userId}`);
-//   }
-
-
-
-
-// }

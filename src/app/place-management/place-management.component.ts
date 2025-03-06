@@ -66,12 +66,13 @@ export class PlaceManagementComponent implements OnInit {
 
   currentUserRole: string | null = null;
 
-  isLikedMap: { [placeId: number ]: boolean } = {};
+  isLikedMap: { [placeId: number]: boolean } = {};
 
   private store = inject(Store<{ likes: { likedPlaces: number[] } }>);
   private likeService = inject(LikeService);
 
   likedPlaces = signal<number[]>([]);
+  likesCountMap: Map<number, number> = new Map();  // Store likes count for each place
 
   constructor(
     private fb: FormBuilder,
@@ -121,6 +122,9 @@ export class PlaceManagementComponent implements OnInit {
     this.initForm();
     this.getCurrentUser();
     this.searchPlaces();
+    this.loadLikedPlaces(); 
+    this.loadLikesCount();
+
 
     this.store
       .select((state) => state.likes.likedPlaces)
@@ -128,20 +132,7 @@ export class PlaceManagementComponent implements OnInit {
         this.likedPlaces.set(liked);
       });
 
-      this.placeService.getAllPlaces().subscribe((data) => {
-        // this.places = data; // Assign the fetched places to the `places` array
-        // this.places.forEach((place) => {
-        //   if (place.id !== null && place.id !== undefined) { // Ensure `id` is valid
-        //     this.isLiked(place.id).subscribe((hasLiked) => {
-        //       this.isLikedMap[place.id!] = hasLiked; // `!` ensures it's not null
-        //     });
-        //   } else {
-        //     console.warn('Skipping place with invalid ID:', place);
-        //   }
-        // });
-      });
-      
-   
+    this.placeService.getAllPlaces().subscribe((data) => {});
   }
 
   toggleDropdown(): void {
@@ -322,6 +313,10 @@ export class PlaceManagementComponent implements OnInit {
       next: (data) => {
         try {
           this.currentUserId = data.id;
+          this.loadLikedPlaces();
+
+          console.log(data.id);
+          console.log(this.currentUserId)
           this.currentUserId2 = data.id;
           this.currentUserName = data.username;
           this.profilePicture = data.profilePicture;
@@ -404,7 +399,22 @@ export class PlaceManagementComponent implements OnInit {
     this.showGallery = false;
   }
 
-  toggleLike(placeId: number): void {
+
+
+  loadLikedPlaces(): void {
+    if (!this.currentUserId || isNaN(+this.currentUserId)) {
+      console.warn('User ID is null or invalid, skipping request to load liked places');
+      return; // Si l'ID utilisateur est null ou invalide, on arrête ici
+    }
+  
+    this.likeService.getLikedPlaces(+this.currentUserId).subscribe((places: number[]) => {
+      this.likedPlaces.set(places);
+      console.log('Places liked:', places);
+    });
+  }
+  
+  
+  createLike(placeId: number): void {
     if (this.currentUserId === null) {
       console.error('User ID is missing');
       return;
@@ -416,82 +426,37 @@ export class PlaceManagementComponent implements OnInit {
       return;
     }
 
-    // likeRequestDTO : LikeRequestDTO = {
-    //   userId: this.currentUserId ? Number(this.currentUserId) : 0,
-    // placeId: this.selectedPlace.id,
-    // }
     const likeRequestDTO: LikeRequestDTO = { userId, placeId };
 
     this.likeService.toggleLike(likeRequestDTO).subscribe({
-        next: (response: string) => { // Ensure response is treated as a string
-            console.log(response); // Log the response, should be like "Place liked successfully"
-            if (response.includes('liked')) {  // Check if the response includes 'liked'
-                this.store.dispatch(likePlace({ placeId }));
-            } else {
-                this.store.dispatch(unlikePlace({ placeId }));
-            }
-        },
-        error: (err) => {
-            console.error('Error toggling like:', err);
-        },
+      next: (response) => {
+        this.loadLikedPlaces();
+        this.loadLikesCount();
+        console.log(response.message);
+        if (response.message === 'liked') {
+          this.store.dispatch(likePlace({ placeId }));
+        } else {
+          this.store.dispatch(unlikePlace({ placeId }));
+        }
+      },
+      error: (err) => {
+        console.error('Error toggling like:', err);
+      },
     });
   }
 
-  isLiked(placeId: number): Observable<boolean> {
-    if (this.currentUserId === null) {
- 
-      return of(false);
-    }
-
-    return this.likeService.hasLiked(Number(this.currentUserId), placeId);
+  loadLikesCount(): void {
+    this.likeService.getLikesCountForEachPlace().subscribe({
+      next: (countMap) => {
+        // Convert the object to a Map with number keys
+        this.likesCountMap = new Map(
+          Object.entries(countMap).map(([key, value]) => [Number(key), value])
+        );
+        console.log('Likes count for each place:', this.likesCountMap);
+      },
+      error: (err) => {
+        console.error('Error fetching likes count for each place:', err);
+      },
+    });
   }
-
-//   toggleLike(userId: number | null, placeId: number): void {
-//     if (userId === null) {
-//         console.error('User ID is missing');
-//         return;
-//     }
-
-//     const likeRequestDTO: LikeRequestDTO = { userId, placeId };
-
-//     this.likeService.sendToggleLikeRequest(likeRequestDTO).subscribe({
-//         next: (response: string) => {
-//             console.log(response);
-//             if (response.includes('liked')) {
-//                 this.store.dispatch(likePlace({ placeId }));
-//                 this.isLikedMap[placeId] = true; // Update like status
-//             } else {
-//                 this.store.dispatch(unlikePlace({ placeId }));
-//                 this.isLikedMap[placeId] = false; // Update like status
-//             }
-//         },
-//         error: (err) => {
-//             console.error('Error toggling like:', err);
-//         },
-//     });
-// }
-
-// onLikeButtonClick(userId: number | null, placeId: number): void {
-//   if (userId === null) {
-//       console.error('User ID is missing');
-//       return;
-//   }
-//   this.toggleLike(userId, placeId);
-// }
-
-//   isLiked(placeId: number | null): Observable<boolean> {
-//     if (this.currentUserId === null) {
-//       return of(false); // Return false if the user is not logged in
-//     }
-//     const userId = Number(this.currentUserId); // Convert to number
-//     if (isNaN(userId)) {
-//       return of(false); // Return false if the conversion fails
-//     }
-//     return this.likeService.hasLiked(userId, placeId);
-//   }
-
-//   getNumericUserId(): number | null {
-//     return this.currentUserId ? Number(this.currentUserId) : null;
-//   }
-  
 }
