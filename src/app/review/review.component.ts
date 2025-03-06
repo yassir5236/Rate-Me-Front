@@ -4,6 +4,7 @@ import { UserService } from '../services/user.service';
 import { Review } from '../models/review.model';
 import { ReviewService } from '../services/review.service';
 import { CommonModule } from '@angular/common';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-review',
@@ -24,7 +25,9 @@ export class ReviewComponent implements OnInit {
   constructor(
     private reviewService: ReviewService,
     private fb: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+        private toastr: ToastrService
+    
   ) {
     this.reviewForm = this.fb.group({
       comment: ['', Validators.required],
@@ -83,6 +86,8 @@ export class ReviewComponent implements OnInit {
 
   onDelete(reviewId: number): void {
     this.reviewService.deleteReview(reviewId).subscribe(() => {
+      this.toastr.success('the comment deteleted successfully');
+
       this.loadReviews();
     });
   }

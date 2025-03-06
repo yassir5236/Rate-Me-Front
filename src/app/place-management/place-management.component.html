@@ -1,4 +1,4 @@
-<div class="max-w-6xl mx-auto p-8 rounded-lg shadow-xl">
+<div class="max-w-4xl mx-auto p-8 rounded-lg shadow-xl">
   <h2 class="text-3xl font-semibold text-gray-800 mb-6">Gestion des Lieux</h2>
 
   <div class="">
@@ -361,21 +361,23 @@
           </p>
           <div class="flex justify-between items-center">
             <div class="flex space-x-4">
-              <button
-                class="flex items-center text-gray-500 hover:text-blue-500"
+              <button 
+              class="flex items-center text-gray-500 hover:text-blue-500"
+              (click)="toggleLike(place.id ?? 0)" 
               >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  class="h-5 w-5"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
+            
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                class="h-5 w-5"
+                viewBox="0 0 20 20"
+                [attr.fill]="isLiked(place.id ?? 0) ? 'blue' : 'currentColor'"
                 >
-                  <path
-                    d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"
-                  />
-                </svg>
-                <span class="ml-2">Liked</span>
-              </button>
+                <path
+                  d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"
+                />
+              </svg>
+              <span class="ml-2">{{ isLiked(place.id ?? 0) ? 'Liked' : 'Like' }}</span>
+            </button>
               <button
                 class="flex items-center text-gray-500 hover:text-green-500"
                 (click)="toggleReviewSection(place.id)"

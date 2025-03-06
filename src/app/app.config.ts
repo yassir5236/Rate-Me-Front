@@ -4,8 +4,10 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { provideAnimations } from '@angular/platform-browser/animations'; // Importez provideAnimations
-import { provideToastr } from 'ngx-toastr'; // Importez provideToastr
+import { provideAnimations } from '@angular/platform-browser/animations'; 
+import { provideToastr } from 'ngx-toastr'; 
+import { provideStore } from '@ngrx/store';
+import { likesReducer } from './store/reducers/likes.reducer';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -13,14 +15,15 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideCharts(withDefaultRegisterables()),
-    provideAnimations(), // Fournit les animations nécessaires pour Toastr
-    provideToastr({ // Configure Toastr
-      timeOut: 3000, // Durée d'affichage de la notification (3 secondes)
-      positionClass: 'toast-bottom-right', // Position de la notification
-      preventDuplicates: true, // Empêche les notifications en double
-      progressBar: true, // Affiche une barre de progression
-      closeButton: true, // Affiche un bouton de fermeture
+    provideAnimations(), 
+    provideToastr({ 
+      timeOut: 3000, 
+      positionClass: 'toast-bottom-right',
+      preventDuplicates: true, 
+      progressBar: true,
+      closeButton: true, 
     }),
+    provideStore({ likes: likesReducer }),
   ]
 };
 
