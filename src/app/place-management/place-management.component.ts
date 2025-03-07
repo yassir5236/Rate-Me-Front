@@ -23,6 +23,8 @@ import { likePlace, unlikePlace } from '../store/actions/likes.actions';
 import { LikeService } from '../services/like.service';
 import { Observable, of } from 'rxjs';
 import { LikeRequestDTO } from './../models/like.model';
+import { NgxPaginationModule } from 'ngx-pagination';
+
 
 interface ImageFile {
   file: File;
@@ -37,6 +39,7 @@ interface ImageFile {
     ReviewComponent,
     FormsModule,
     SharePopupComponent,
+    NgxPaginationModule
   ],
   templateUrl: './place-management.component.html',
   styleUrls: ['./place-management.component.css'],
@@ -72,7 +75,10 @@ export class PlaceManagementComponent implements OnInit {
   private likeService = inject(LikeService);
 
   likedPlaces = signal<number[]>([]);
-  likesCountMap: Map<number, number> = new Map();  // Store likes count for each place
+  likesCountMap: Map<number, number> = new Map(); 
+  places2: Place[] = []; 
+  page: number = 1; 
+  itemsPerPage: number = 5; 
 
   constructor(
     private fb: FormBuilder,
@@ -243,6 +249,11 @@ export class PlaceManagementComponent implements OnInit {
       return;
     }
 
+    if (this.selectedImages.length < 2) {
+      this.toastr.error('Vous devez télécharger au moins 2 images.');
+      return;
+    }
+
     this.placeForm.patchValue({ userId: this.currentUserId });
 
     if (this.placeForm.invalid) {
@@ -276,6 +287,7 @@ export class PlaceManagementComponent implements OnInit {
       this.placeService.createPlace(formData).subscribe({
         next: (place) => {
           this.toastr.success('Lieu créé avec succès !');
+          this.getPlaces();
           this.places.push(place);
           this.resetForm();
         },
