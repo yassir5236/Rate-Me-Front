@@ -24,6 +24,7 @@ import { LikeService } from '../services/like.service';
 import { Observable, of } from 'rxjs';
 import { LikeRequestDTO } from './../models/like.model';
 import { NgxPaginationModule } from 'ngx-pagination';
+import { MapComponent } from '../components/map/map.component';
 
 
 interface ImageFile {
@@ -39,7 +40,8 @@ interface ImageFile {
     ReviewComponent,
     FormsModule,
     SharePopupComponent,
-    NgxPaginationModule
+    NgxPaginationModule,
+    MapComponent
   ],
   templateUrl: './place-management.component.html',
   styleUrls: ['./place-management.component.css'],
@@ -76,7 +78,6 @@ export class PlaceManagementComponent implements OnInit {
 
   likedPlaces = signal<number[]>([]);
   likesCountMap: Map<number, number> = new Map(); 
-  places2: Place[] = []; 
   page: number = 1; 
   itemsPerPage: number = 5; 
 
