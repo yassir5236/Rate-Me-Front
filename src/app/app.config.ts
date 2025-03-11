@@ -4,8 +4,8 @@ import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { authInterceptor } from './interceptors/auth.interceptor';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
-import { provideAnimations } from '@angular/platform-browser/animations'; 
-import { provideToastr } from 'ngx-toastr'; 
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideToastr } from 'ngx-toastr';
 import { provideStore } from '@ngrx/store';
 import { likesReducer } from './store/reducers/likes.reducer';
 
@@ -15,17 +15,15 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptors([authInterceptor])),
     provideCharts(withDefaultRegisterables()),
-    provideAnimations(), 
-    provideToastr({ 
-      timeOut: 3000, 
+    provideAnimations(),
+    provideToastr({
+      timeOut: 3000,
       positionClass: 'toast-bottom-right',
-      preventDuplicates: true, 
+      preventDuplicates: true,
       progressBar: true,
-      closeButton: true, 
+      closeButton: true,
     }),
     provideStore({ likes: likesReducer }),
-  ]
+
+  ],
 };
-
-
-
