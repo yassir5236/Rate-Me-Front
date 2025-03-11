@@ -1,14 +1,12 @@
-<div class="max-w-6xl mx-auto p-8 bg-white rounded-lg shadow-xl">
+<div class="max-w-6xl mx-auto p-8 bg-gradient-to-b from-blue-50 to-orange-500 rounded-lg shadow-xl mt-10">
     <h2 class="text-3xl font-semibold text-gray-800 mb-6">Gestion des Catégories</h2>
   
-    <!-- Button to Add Category -->
     <button 
-      class="bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white font-semibold py-2 px-6 rounded-lg mb-6 transition-all duration-200 shadow-md hover:shadow-lg"
+      class="bg-[#dd601c]  hover:indigo-100 text-white font-semibold py-2 px-6 rounded-lg mb-6 transition-all duration-200 shadow-md hover:shadow-lg"
       (click)="openForm()">
-      ➕ Ajouter une catégorie
+       Ajouter une catégorie
     </button>
   
-    <!-- Add/Edit Form -->
     <div *ngIf="showForm" class="bg-gray-100 p-6 rounded-lg shadow-lg mb-8 max-w-3xl mx-auto">
       <h3 class="text-2xl font-medium text-gray-800 mb-4">{{ currentCategory.id ? 'Modifier' : 'Ajouter' }} une catégorie</h3>
       <form (ngSubmit)="saveCategory()" class="space-y-6">
@@ -39,21 +37,19 @@
       </form>
     </div>
   
-    <!-- Categories Cards -->
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
       <div *ngFor="let category of categories" class="bg-white p-6 rounded-lg shadow-lg border border-gray-200 transition-transform transform hover:scale-105 duration-300 ease-in-out">
         <h4 class="text-2xl font-medium text-gray-800">{{ category.name }}</h4>
-        <p class="text-sm text-gray-500">ID: {{ category.id }}</p>
         <div class="mt-4 flex justify-between space-x-4">
           <button 
             (click)="openForm(category)" 
-            class="bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200">
-            ✏️ Modifier
+            class="">
+            ✏️ 
           </button>
           <button 
             (click)="deleteCategory(category.id)" 
-            class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-200">
-            🗑️ Supprimer
+            class="">
+            🗑️ 
           </button>
         </div>
       </div>

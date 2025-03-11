@@ -48,7 +48,7 @@
                 d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
               />
             </svg>
-            <span>Users</span>
+            <a routerLink="/category">Users</a>
           </li>
           <li
             class="p-3 rounded-lg hover:bg-gradient-to-r from-sky-400 to-sky-600 hover:text-white transition-all cursor-pointer text-lg font-medium flex items-center space-x-3"
@@ -105,7 +105,9 @@
           <p class="text-4xl font-bold mt-2">
             {{ statistics["totalUsers"] || 0 }}
           </p>
-          <p class="text-sm mt-2 opacity-80 text-green-600">+12% from last month</p>
+          <p class="text-sm mt-2 opacity-80 text-green-600">
+            +12% from last month
+          </p>
         </div>
         <div
           class="bg-white to-green-100 p-6 rounded-xl shadow-lg text-gray-700"
@@ -114,7 +116,9 @@
           <p class="text-4xl font-bold mt-2">
             {{ statistics["totalPlaces"] || 0 }}
           </p>
-          <p class="text-sm mt-2 opacity-80 text-green-600">+8% from last month</p>
+          <p class="text-sm mt-2 opacity-80 text-green-600">
+            +8% from last month
+          </p>
         </div>
         <div
           class="bg-white to-green-100 p-6 rounded-xl shadow-lg text-gray-700"
@@ -123,7 +127,9 @@
           <p class="text-4xl font-bold mt-2">
             {{ statistics["totalReviews"] || 0 }}
           </p>
-          <p class="text-sm mt-2 opacity-80 text-green-600">+5% from last month</p>
+          <p class="text-sm mt-2 opacity-80 text-green-600">
+            +5% from last month
+          </p>
         </div>
       </section>
 
@@ -134,12 +140,13 @@
         <div
           class="relative w-full h-64 bg-gradient-to-r from-sky-100 to-green-100 rounded-lg flex items-center justify-center text-sky-800 font-bold text-2xl shadow-inner"
         >
-                 
-        <canvas baseChart 
-        [data]="lineChartData" 
-        [options]="lineChartOptions" 
-        chartType="line">
-      </canvas>
+          <canvas
+            baseChart
+            [data]="lineChartData"
+            [options]="lineChartOptions"
+            chartType="line"
+          >
+          </canvas>
         </div>
       </div>
     </main>
