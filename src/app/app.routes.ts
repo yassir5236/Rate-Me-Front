@@ -43,6 +43,7 @@ export const routes: Routes = [
     path: 'category',
     loadComponent: () =>
       import('./category/category.component').then((m) => m.CategoryComponent),
+    data: { animation: 'category' },
   },
   {
     path: 'places',

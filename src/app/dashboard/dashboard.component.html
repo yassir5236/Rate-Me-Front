@@ -48,7 +48,7 @@
                 d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
               />
             </svg>
-            <a routerLink="/category">Users</a>
+            <a routerLink="/user">Users</a>
           </li>
           <li
             class="p-3 rounded-lg hover:bg-gradient-to-r from-sky-400 to-sky-600 hover:text-white transition-all cursor-pointer text-lg font-medium flex items-center space-x-3"
@@ -73,7 +73,7 @@
                 d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
-            <span>Settings</span>
+            <a routerLink="/category">Categories</a>
           </li>
         </ul>
       </nav>
@@ -84,18 +84,7 @@
         class="flex justify-between items-center bg-white shadow-md p-6 rounded-lg mb-8"
       >
         <h1 class="text-3xl font-bold text-sky-800">Dashboard</h1>
-        <div class="flex items-center space-x-4">
-          <button
-            class="bg-gradient-to-r from-sky-400 to-sky-600 text-white px-6 py-2 rounded-full hover:from-sky-500 hover:to-sky-700 transition-all transform hover:scale-105"
-          >
-            New Report
-          </button>
-          <button
-            class="bg-gradient-to-r from-orange-400 to-orange-600 text-white px-6 py-2 rounded-full hover:from-orange-500 hover:to-orange-700 transition-all transform hover:scale-105"
-          >
-            Notifications
-          </button>
-        </div>
+        
       </header>
       <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div
@@ -105,9 +94,7 @@
           <p class="text-4xl font-bold mt-2">
             {{ statistics["totalUsers"] || 0 }}
           </p>
-          <p class="text-sm mt-2 opacity-80 text-green-600">
-            +12% from last month
-          </p>
+         
         </div>
         <div
           class="bg-white to-green-100 p-6 rounded-xl shadow-lg text-gray-700"
@@ -116,9 +103,7 @@
           <p class="text-4xl font-bold mt-2">
             {{ statistics["totalPlaces"] || 0 }}
           </p>
-          <p class="text-sm mt-2 opacity-80 text-green-600">
-            +8% from last month
-          </p>
+         
         </div>
         <div
           class="bg-white to-green-100 p-6 rounded-xl shadow-lg text-gray-700"
@@ -127,9 +112,7 @@
           <p class="text-4xl font-bold mt-2">
             {{ statistics["totalReviews"] || 0 }}
           </p>
-          <p class="text-sm mt-2 opacity-80 text-green-600">
-            +5% from last month
-          </p>
+          
         </div>
       </section>
 

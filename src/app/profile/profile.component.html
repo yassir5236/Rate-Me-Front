@@ -1,218 +1,266 @@
+<div
+  class="px-20 py-12 gap-12 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex flex-col md:flex-row"
+>
+  <div
+    class="w-full md:w-1/2 bg-white/70 backdrop-blur-lg border border-gray-200 rounded-3xl shadow-xl relative overflow-hidden flex flex-col h-fit mt-10"
+  >
+    <div class="relative h-52 bg-gradient-to-r from-[#98e8ed] to-[#f7990b]">
+      <div class="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
+        <div class="relative group">
+          <img
+            [src]="profileImage || 'assets/istockphoto-1142192548-612x612.jpg'"
+            class="h-32 w-32 rounded-full border-4 border-white shadow-xl object-cover ring-4 ring-offset-2 ring-[#f7990b] transition-transform duration-300 group-hover:scale-105"
+          />
+          <label
+            class="absolute bottom-1 right-1 bg-white p-1.5 rounded-full shadow-md cursor-pointer hover:bg-gray-100 transition"
+          >
+            <input
+              type="file"
+              accept="image/*"
+              class="hidden"
+              (change)="onFileSelected($event)"
+            />
+            <svg
+              class="w-5 h-5 text-[#f7990b]"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h5v-2H4V5h12v10h-5v2h5a2 2 0 002-2V5a2 2 0 00-2-2H4z"
+              />
+              <path d="M8 12l3-3 3 3H8z" />
+            </svg>
+          </label>
+        </div>
+      </div>
+    </div>
 
-<div class="px-6 py-12 bg-gradient-to-br from-blue-50 to-purple-50 min-h-screen flex flex-col md:flex-row ">
-  
-  <div class="w-full md:w-1/2 bg-white/70 backdrop-blur-lg border border-gray-200 rounded-3xl shadow-xl relative overflow-hidden flex flex-col h-fit mt-10">
-  
-  <div class="relative h-52 bg-gradient-to-r from-[#98e8ed] to-[#f7990b]">
-    <div class="absolute -bottom-16 left-1/2 transform -translate-x-1/2">
-      <div class="relative group">
-        <img
-          [src]="profileImage || 'assets/istockphoto-1142192548-612x612.jpg'"
-          class="h-32 w-32 rounded-full border-4 border-white shadow-xl object-cover ring-4 ring-offset-2 ring-[#f7990b] transition-transform duration-300 group-hover:scale-105"
-        />
-        <label class="absolute bottom-1 right-1 bg-white p-1.5 rounded-full shadow-md cursor-pointer hover:bg-gray-100 transition">
-          <input type="file" accept="image/*" class="hidden" (change)="onFileSelected($event)" />
-          <svg class="w-5 h-5 text-[#f7990b]" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M4 3a2 2 0 00-2 2v10a2 2 0 002 2h5v-2H4V5h12v10h-5v2h5a2 2 0 002-2V5a2 2 0 00-2-2H4z" />
-            <path d="M8 12l3-3 3 3H8z" />
-          </svg>
-        </label>
+    <div class="pt-20 pb-10 px-6 text-center space-y-4">
+      <h1 class="text-3xl font-bold text-gray-800">{{ userName }}</h1>
+      <p class="text-sm text-gray-600 flex items-center justify-center gap-2">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          class="h-5 w-5 text-[#f7990b]"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3z"
+          />
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 22s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z"
+          />
+        </svg>
+        {{ profileForm.get("location")?.value || "Los Angeles, California" }}
+      </p>
+
+      <p class="text-gray-700 max-w-2xl mx-auto leading-relaxed">
+        #
+        {{
+          profileForm.get("bio")?.value ||
+            "Passionate artist with a love for creating stunning visuals and immersive experiences. Based in Los Angeles, working worldwide."
+        }}
+      </p>
+
+      <div class="flex justify-center gap-4 mt-6">
+        <button
+          *ngIf="!isEditing"
+          (click)="isEditing = true"
+          class="px-6 py-2 bg-[#f7990b] text-white rounded-full font-semibold hover:bg-[#d87c09] transition-all transform hover:scale-105 shadow-lg"
+        >
+          Modifier Profil
+        </button>
+      </div>
+
+      <div *ngIf="isEditing" class="w-full max-w-xl mx-auto mt-6 text-left">
+        <h2 class="text-xl font-semibold mb-4">Modifier le Profil</h2>
+
+        <form [formGroup]="profileForm" class="space-y-4">
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Lieu</label>
+            <input
+              type="text"
+              formControlName="location"
+              class="w-full px-4 py-2 border rounded-lg focus:ring-[#f7990b] focus:border-[#f7990b] focus:outline-none"
+            />
+          </div>
+
+          <div>
+            <label class="block text-gray-700 font-medium mb-1">Bio</label>
+            <textarea
+              formControlName="bio"
+              rows="3"
+              class="w-full px-4 py-2 border rounded-lg focus:ring-[#f7990b] focus:border-[#f7990b] focus:outline-none"
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end gap-4">
+            <button
+              type="button"
+              (click)="isEditing = false"
+              class="px-4 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition"
+            >
+              Annuler
+            </button>
+            <button
+              type="button"
+              (click)="updateProfile()"
+              [disabled]="profileForm.invalid"
+              class="px-4 py-2 bg-gradient-to-r from-[#f7990b] to-[#ea8f27] text-white rounded-full hover:shadow-lg transition-all transform hover:scale-105"
+            >
+              Enregistrer
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
 
-  <div class="pt-20 pb-10 px-6 text-center space-y-4">
-
-    <h1 class="text-3xl font-bold text-gray-800">{{ userName }}</h1>
-    <p class="text-sm text-gray-600 flex items-center justify-center gap-2">
-      <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-[#f7990b]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3z" />
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 22s8-4.5 8-10a8 8 0 10-16 0c0 5.5 8 10 8 10z" />
-      </svg>
-      {{ profileForm.get('location')?.value || 'Los Angeles, California' }}
-    </p>
-
-    <p class="text-gray-700 max-w-2xl mx-auto leading-relaxed">#
-      {{ profileForm.get('bio')?.value || 'Passionate artist with a love for creating stunning visuals and immersive experiences. Based in Los Angeles, working worldwide.' }}
-    </p>
-
-    <div class="flex justify-center gap-4 mt-6">
-      <button *ngIf="!isEditing"
-        (click)="isEditing = true"
-        class="px-6 py-2 bg-[#f7990b] text-white rounded-full font-semibold hover:bg-[#d87c09] transition-all transform hover:scale-105 shadow-lg">
-        Modifier Profil
-      </button>
-    </div>
-
-    <div *ngIf="isEditing" class="w-full max-w-xl mx-auto mt-6 text-left">
-      <h2 class="text-xl font-semibold mb-4">Modifier le Profil</h2>
-
-      <form [formGroup]="profileForm" class="space-y-4">
-        <div>
-          <label class="block text-gray-700 font-medium mb-1">Lieu</label>
-          <input type="text" formControlName="location"
-            class="w-full px-4 py-2 border rounded-lg focus:ring-[#f7990b] focus:border-[#f7990b] focus:outline-none" />
-        </div>
-
-        <div>
-          <label class="block text-gray-700 font-medium mb-1">Bio</label>
-          <textarea formControlName="bio" rows="3"
-            class="w-full px-4 py-2 border rounded-lg focus:ring-[#f7990b] focus:border-[#f7990b] focus:outline-none"></textarea>
-        </div>
-
-        <div class="flex justify-end gap-4">
-          <button type="button" (click)="isEditing = false"
-            class="px-4 py-2 bg-gray-500 text-white rounded-full hover:bg-gray-600 transition">
-            Annuler
-          </button>
-          <button type="button" (click)="updateProfile()" [disabled]="profileForm.invalid"
-            class="px-4 py-2 bg-gradient-to-r from-[#f7990b] to-[#ea8f27] text-white rounded-full hover:shadow-lg transition-all transform hover:scale-105">
-            Enregistrer
-          </button>
-        </div>
-      </form>
-    </div>
-
-  </div>
-</div>
-
-
-
-  <div class="max-w-4xl mx-auto ">
-  <div class="border-t border-gray-200 py-8 px-12 ">
-    <div *ngIf="sharedPlaces.length > 0; else noSharedPlaces">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-8">
-        <div
-          *ngFor="let sharedPlace of sharedPlaces"
-          class="bg-white rounded-lg shadow-lg border border-gray-200"
-        >
-          <div class="p-4 flex items-center space-x-3 border-b border-gray-200">
-            <button (click)="ToUserData(sharedPlace.user?.id)">
-              <img
-                [src]="sharedPlace.user?.profilePicture"
-                alt="Profile Picture"
-                class="h-10 w-10 rounded-full object-cover"
-              />
-            </button>
-
-            <div>
-              <h4 class="text-sm font-semibold text-gray-900">
-                {{ sharedPlace.user?.username }}
-              </h4>
-              <p class="text-xs text-gray-500">2 hours ago</p>
-            </div>
-          </div>
-          <div class="p-4">
-            <p class="text-lg font-medium text-black-500">
-              {{ sharedPlace.title }}
-            </p>
-          </div>
-
-          <div class="p-4 flex items-center space-x-3 border-b border-gray-200">
-            <button (click)="ToUserData(sharedPlace.place.user.id)">
-              <img
-                [src]="sharedPlace.place.user?.profilePicture"
-                alt="Profile Picture"
-                class="h-10 w-10 rounded-full object-cover"
-              />
-            </button>
-
-            <div>
-              <h4 class="text-sm font-semibold text-gray-900">
-                {{ sharedPlace.place.user?.username }}
-              </h4>
-              <p class="text-xs text-gray-500">2 hours ago</p>
-            </div>
-          </div>
-
-          <div class="p-4">
-            <p class="text-lg font-medium text-green-500">
-              #{{ sharedPlace.place.name }}
-            </p>
-            <p class="text-sm text-gray-600">
-              {{ sharedPlace.place.description }}
-            </p>
-          </div>
-
-          <div *ngIf="sharedPlace.place?.images?.length > 0" class="p-4">
-            <div class="grid grid-cols-2 gap-2">
-              <div
-                *ngFor="
-                  let image of sharedPlace.place.images.slice(0, 2);
-                  let i = index
-                "
-                class="relative cursor-pointer"
-                (click)="openGallery(sharedPlace.place.images)"
-              >
+  <div class="max-w-4xl mx-auto">
+    <div class="border-t border-gray-200 py-8 ">
+      <div *ngIf="sharedPlaces.length > 0; else noSharedPlaces">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-8">
+          <div
+            *ngFor="let sharedPlace of sharedPlaces"
+            class="bg-white rounded-lg shadow-lg border border-gray-200"
+          >
+            <div
+              class="p-4 flex items-center space-x-3 border-b border-gray-200"
+            >
+              <button (click)="ToUserData(sharedPlace.user?.id)">
                 <img
-                  [src]="image.path"
-                  alt="Image de {{ sharedPlace.place.name }}"
-                  class="rounded-lg shadow-lg h-64 w-full object-cover"
+                  [src]="sharedPlace.user?.profilePicture"
+                  alt="Profile Picture"
+                  class="h-10 w-10 rounded-full object-cover"
                 />
+              </button>
+
+              <div>
+                <h4 class="text-sm font-semibold text-gray-900">
+                  {{ sharedPlace.user?.username }}
+                </h4>
+                <p class="text-xs text-gray-500">2 hours ago</p>
+              </div>
+            </div>
+            <div class="p-4">
+              <p class="text-lg font-medium text-black-500">
+                {{ sharedPlace.title }}
+              </p>
+            </div>
+
+            <div
+              class="p-4 flex items-center space-x-3 border-b border-gray-200"
+            >
+              <button (click)="ToUserData(sharedPlace.place.user.id)">
+                <img
+                  [src]="sharedPlace.place.user?.profilePicture"
+                  alt="Profile Picture"
+                  class="h-10 w-10 rounded-full object-cover"
+                />
+              </button>
+
+              <div>
+                <h4 class="text-sm font-semibold text-gray-900">
+                  {{ sharedPlace.place.user?.username }}
+                </h4>
+                <p class="text-xs text-gray-500">2 hours ago</p>
+              </div>
+            </div>
+
+            <div class="p-4">
+              <p class="text-lg font-medium text-green-500">
+                #{{ sharedPlace.place.name }}
+              </p>
+              <p class="text-sm text-gray-600">
+                {{ sharedPlace.place.description }}
+              </p>
+            </div>
+
+            <div *ngIf="sharedPlace.place?.images?.length > 0" class="p-4">
+              <div class="grid grid-cols-2 gap-2">
                 <div
-                  *ngIf="i === 1 && sharedPlace.images?.length > 2"
-                  class="absolute inset-0 bg-black-10 flex items-center justify-center rounded-lg"
+                  *ngFor="
+                    let image of sharedPlace.place.images.slice(0, 2);
+                    let i = index
+                  "
+                  class="relative cursor-pointer"
+                  (click)="openGallery(sharedPlace.place.images)"
                 >
-                  <span
-                    class="text-black text-2xl font-bold bg-white p-2 rounded-full"
+                  <img
+                    [src]="image.path"
+                    alt="Image de {{ sharedPlace.place.name }}"
+                    class="rounded-lg shadow-lg h-64 w-full object-cover"
+                  />
+                  <div
+                    *ngIf="i === 1 && sharedPlace.images?.length > 2"
+                    class="absolute inset-0 bg-black-10 flex items-center justify-center rounded-lg"
                   >
-                    +{{ sharedPlace.images?.length - 2 }}
-                  </span>
+                    <span
+                      class="text-black text-2xl font-bold bg-white p-2 rounded-full"
+                    >
+                      +{{ sharedPlace.images?.length - 2 }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <p
+              *ngIf="
+                !sharedPlace.place?.images ||
+                sharedPlace.place.images?.length === 0
+              "
+              class="text-gray-500 p-4"
+            >
+              Aucune image disponible
+            </p>
+
+            <div
+              *ngIf="showReviewForPlaceId === sharedPlace.place.id"
+              class="mt-6 p-10"
+            >
+              <app-review [placeId]="sharedPlace.place.id"></app-review>
+            </div>
+
+            <div class="p-4 border-t border-gray-200">
+              <p class="text-sm text-gray-500 mb-2">
+                Catégories: {{ sharedPlace.place.category?.name }}
+              </p>
+              <div class="flex justify-between items-center">
+                <div class="flex space-x-4">
+                  <button
+                    class="flex items-center text-gray-500 hover:text-green-500"
+                    (click)="toggleReviewSection(sharedPlace.place?.id)"
+                    [disabled]="!sharedPlace.place.id"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-5 w-5"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                    >
+                      <path
+                        fill-rule="evenodd"
+                        d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123A7 7 0 012 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
+                        clip-rule="evenodd"
+                      />
+                    </svg>
+                    <span class="ml-2">Comment</span>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
-
-          <p
-            *ngIf="
-              !sharedPlace.place?.images ||
-              sharedPlace.place.images?.length === 0
-            "
-            class="text-gray-500 p-4"
-          >
-            Aucune image disponible
-          </p>
-
-          <div
-            *ngIf="showReviewForPlaceId === sharedPlace.place.id"
-            class="mt-6 p-10"
-          >
-            <app-review [placeId]="sharedPlace.place.id"></app-review>
-          </div>
-
-          <div class="p-4 border-t border-gray-200">
-            <p class="text-sm text-gray-500 mb-2">
-              Catégories: {{ sharedPlace.place.category?.name }}
-            </p>
-            <div class="flex justify-between items-center">
-              <div class="flex space-x-4">
-               
-                <button
-                  class="flex items-center text-gray-500 hover:text-green-500"
-                  (click)="toggleReviewSection(sharedPlace.place?.id)"
-                  [disabled]="!sharedPlace.place.id"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123A7 7 0 012 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                  <span class="ml-2">Comment</span>
-                </button>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
-  </div>
 
     <ng-template #noSharedPlaces>
       <p class="text-gray-600">No shared places yet.</p>
