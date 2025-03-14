@@ -1,4 +1,4 @@
-import { Component, OnInit, HostListener, inject, signal } from '@angular/core';
+import { Component, OnInit, HostListener, inject, signal, ViewChild } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -24,7 +24,7 @@ import { LikeService } from '../services/like.service';
 import { Observable, of } from 'rxjs';
 import { LikeRequestDTO } from './../models/like.model';
 import { NgxPaginationModule } from 'ngx-pagination';
-import { MapComponent } from '../components/map/map.component';
+import { MapComponent } from '../map/map.component';
 
 
 interface ImageFile {
@@ -80,6 +80,11 @@ export class PlaceManagementComponent implements OnInit {
   likesCountMap: Map<number, number> = new Map(); 
   page: number = 1; 
   itemsPerPage: number = 5; 
+  @ViewChild(MapComponent) mapComponent!: MapComponent;
+  currentPlace: Partial<Place> = {
+    latitude: 48.8566, 
+    longitude: 2.3522
+  };
 
   constructor(
     private fb: FormBuilder,
@@ -131,8 +136,8 @@ export class PlaceManagementComponent implements OnInit {
     this.searchPlaces();
     this.loadLikedPlaces(); 
     this.loadLikesCount();
-
-
+  
+   
     this.store
       .select((state) => state.likes.likedPlaces)
       .subscribe((liked) => {
@@ -244,35 +249,93 @@ export class PlaceManagementComponent implements OnInit {
     this.selectedImages = this.selectedImages.filter((img) => img !== image);
   }
 
+  // savePlace(): void {
+  //   if (!this.currentUserId) {
+  //     console.error('User ID is missing. Cannot save place.');
+  //     return;
+  //   }
+
+  //   if (this.selectedImages.length < 2) {
+  //     this.toastr.error('Vous devez télécharger au moins 2 images.');
+  //     return;
+  //   }
+
+  //   this.placeForm.patchValue({ userId: this.currentUserId });
+
+  //   if (this.placeForm.invalid) {
+  //     console.log('Form Values:', this.placeForm.value);
+  //     console.log('Form Validity:', this.placeForm.valid);
+  //     console.log('Form Errors:', this.placeForm.errors);
+  //     return;
+  //   }
+
+  //   const formData = new FormData();
+  //   const placeData = this.placeForm.value;
+
+  //   formData.append('place', JSON.stringify(placeData));
+
+  //   this.selectedImages.forEach((image, index) => {
+  //     formData.append(`images`, image.file, image.file.name);
+  //   });
+
+  //   if (placeData.id) {
+  //     this.placeService.updatePlace(placeData.id, formData).subscribe({
+  //       next: () => {
+  //         this.toastr.success('Lieu mis à jour avec succès !', 'Succès');
+  //         this.resetForm();
+  //       },
+  //       error: (error) => {
+  //         console.error('Error updating place:', error);
+  //         this.toastr.error('Erreur lors de la mise à jour du lieu');
+  //       },
+  //     });
+  //   } else {
+  //     this.placeService.createPlace(formData).subscribe({
+  //       next: (place) => {
+  //         this.toastr.success('Lieu créé avec succès !');
+  //         this.getPlaces();
+  //         this.places.push(place);
+  //         this.resetForm();
+  //       },
+  //       error: (error) => {
+  //         console.error('Error creating place:', error);
+  //         this.toastr.error('Erreur lors de la création du lieu');
+  //       },
+  //     });
+  //   }
+  // }
+
+
   savePlace(): void {
     if (!this.currentUserId) {
       console.error('User ID is missing. Cannot save place.');
       return;
     }
-
+  
     if (this.selectedImages.length < 2) {
       this.toastr.error('Vous devez télécharger au moins 2 images.');
       return;
     }
-
+  
     this.placeForm.patchValue({ userId: this.currentUserId });
-
+  
     if (this.placeForm.invalid) {
       console.log('Form Values:', this.placeForm.value);
       console.log('Form Validity:', this.placeForm.valid);
       console.log('Form Errors:', this.placeForm.errors);
       return;
     }
-
+  
     const formData = new FormData();
     const placeData = this.placeForm.value;
-
+  
+    // Ajouter les données de localisation au formulaire
     formData.append('place', JSON.stringify(placeData));
-
+  
     this.selectedImages.forEach((image, index) => {
       formData.append(`images`, image.file, image.file.name);
     });
-
+  
     if (placeData.id) {
       this.placeService.updatePlace(placeData.id, formData).subscribe({
         next: () => {
@@ -344,7 +407,7 @@ export class PlaceManagementComponent implements OnInit {
     });
   }
 
-  ToUserData(userId: number | undefined) {
+  ToUserData(userId: number ) {
     if (this.currentUserRole == 'USER' || this.currentUserRole == 'ADMIN') {
       this.router.navigate(['/selectedUser', userId]);
     }
@@ -387,6 +450,9 @@ export class PlaceManagementComponent implements OnInit {
       });
     }
     this.showForm = true;
+    setTimeout(() => {
+      this.mapComponent.initMap();
+    }, 0);
   }
 
   closeForm() {
@@ -472,4 +538,35 @@ export class PlaceManagementComponent implements OnInit {
       },
     });
   }
+
+  onMapLocationSelected(event: { lat: number, lng: number }) {
+    this.placeForm.patchValue({
+      latitude: event.lat,
+      longitude: event.lng
+    });
+  }
+
+  // onPlaceLocationChange(updatedPlace: Partial<Place>) {
+  //   this.currentPlace.latitude = updatedPlace.latitude;
+  //   this.currentPlace.longitude = updatedPlace.longitude;
+  //   this.currentPlace.address = updatedPlace.address;
+  // }
+  
+
+
+
+  onPlaceLocationChange(updatedPlace: Partial<Place>): void {
+    // Mettre à jour les champs du formulaire avec les nouvelles valeurs
+    this.placeForm.patchValue({
+      latitude: updatedPlace.latitude,
+      longitude: updatedPlace.longitude,
+      address: updatedPlace.address,
+    });
+  
+    // Mettre à jour currentPlace pour refléter les changements
+    this.currentPlace = { ...this.currentPlace, ...updatedPlace };
+  }
+
+
+
 }
