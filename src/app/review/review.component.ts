@@ -86,7 +86,7 @@ export class ReviewComponent implements OnInit {
 
   onDelete(reviewId: number): void {
     this.reviewService.deleteReview(reviewId).subscribe(() => {
-      this.toastr.success('the comment deteleted successfully');
+      this.toastr.success('the comment deleted successfully');
 
       this.loadReviews();
     });

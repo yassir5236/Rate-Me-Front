@@ -21,11 +21,7 @@ export const routes: Routes = [
       import('./login/login.component').then((m) => m.LoginComponent),
     data: { animation: 'LoginPage' },
   },
-  {
-    path: 'test',
-    loadComponent: () =>
-      import('./test/test/test.component').then((m) => m.TestComponent),
-  },
+  
   {
     path: 'profile',
     loadComponent: () =>

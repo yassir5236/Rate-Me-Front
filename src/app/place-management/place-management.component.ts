@@ -249,62 +249,6 @@ export class PlaceManagementComponent implements OnInit {
     this.selectedImages = this.selectedImages.filter((img) => img !== image);
   }
 
-  // savePlace(): void {
-  //   if (!this.currentUserId) {
-  //     console.error('User ID is missing. Cannot save place.');
-  //     return;
-  //   }
-
-  //   if (this.selectedImages.length < 2) {
-  //     this.toastr.error('Vous devez télécharger au moins 2 images.');
-  //     return;
-  //   }
-
-  //   this.placeForm.patchValue({ userId: this.currentUserId });
-
-  //   if (this.placeForm.invalid) {
-  //     console.log('Form Values:', this.placeForm.value);
-  //     console.log('Form Validity:', this.placeForm.valid);
-  //     console.log('Form Errors:', this.placeForm.errors);
-  //     return;
-  //   }
-
-  //   const formData = new FormData();
-  //   const placeData = this.placeForm.value;
-
-  //   formData.append('place', JSON.stringify(placeData));
-
-  //   this.selectedImages.forEach((image, index) => {
-  //     formData.append(`images`, image.file, image.file.name);
-  //   });
-
-  //   if (placeData.id) {
-  //     this.placeService.updatePlace(placeData.id, formData).subscribe({
-  //       next: () => {
-  //         this.toastr.success('Lieu mis à jour avec succès !', 'Succès');
-  //         this.resetForm();
-  //       },
-  //       error: (error) => {
-  //         console.error('Error updating place:', error);
-  //         this.toastr.error('Erreur lors de la mise à jour du lieu');
-  //       },
-  //     });
-  //   } else {
-  //     this.placeService.createPlace(formData).subscribe({
-  //       next: (place) => {
-  //         this.toastr.success('Lieu créé avec succès !');
-  //         this.getPlaces();
-  //         this.places.push(place);
-  //         this.resetForm();
-  //       },
-  //       error: (error) => {
-  //         console.error('Error creating place:', error);
-  //         this.toastr.error('Erreur lors de la création du lieu');
-  //       },
-  //     });
-  //   }
-  // }
-
 
   savePlace(): void {
     if (!this.currentUserId) {
@@ -496,6 +440,7 @@ export class PlaceManagementComponent implements OnInit {
   createLike(placeId: number): void {
     if (this.currentUserId === null) {
       console.error('User ID is missing');
+      this.router.navigate(['/login'])
       return;
     }
 
@@ -546,27 +491,23 @@ export class PlaceManagementComponent implements OnInit {
     });
   }
 
-  // onPlaceLocationChange(updatedPlace: Partial<Place>) {
-  //   this.currentPlace.latitude = updatedPlace.latitude;
-  //   this.currentPlace.longitude = updatedPlace.longitude;
-  //   this.currentPlace.address = updatedPlace.address;
-  // }
-  
-
-
-
   onPlaceLocationChange(updatedPlace: Partial<Place>): void {
-    // Mettre à jour les champs du formulaire avec les nouvelles valeurs
     this.placeForm.patchValue({
       latitude: updatedPlace.latitude,
       longitude: updatedPlace.longitude,
       address: updatedPlace.address,
     });
   
-    // Mettre à jour currentPlace pour refléter les changements
     this.currentPlace = { ...this.currentPlace, ...updatedPlace };
   }
 
-
+  getDirections(latitude: number | undefined, longitude: number | undefined): void {
+    if (latitude && longitude) {
+      const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
+      window.open(url, '_blank'); // Ouvre l'URL dans un nouvel onglet
+    } else {
+      console.error('Latitude or longitude is missing.');
+    }
+  }
 
 }

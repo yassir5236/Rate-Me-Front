@@ -1,218 +1,109 @@
-<div class="px-32 py-8">
-    <div class="relative">
-      <div class="h-92 w-full bg-gray-300 overflow-hidden">
-        <img
+<div class="px-4 sm:px-8 md:px-16 lg:px-32 py-6 md:py-8">
+  <div class="relative">
+    <div class="h-48 sm:h-64 md:h-80 w-full bg-gray-300 overflow-hidden">
+      <img
         src="assets/pexels-krakograff-textures-124842124-23516610.jpg"
         alt="Cover photo"
-        class="w-full object-cover"
+        class="w-full h-full object-cover"
       />
-      </div>
-  
-      <div class="container mx-auto px-4">
-        <div class="flex justify-between items-end relative -mt-24">
-          <div class="flex items-end">
-            <div class="relative">
-              <img
-                [src]="user?.profilePicture || ''"
-                alt="Profile picture "
-                class="w-40 h-40 rounded-full border-4 border-white object-cover mt-10"
-              />
-            </div>
-  
-            <div class="ml-4 mb-4">
-              <h1 class="text-3xl font-bold text-gray-900">{{ user?.username }}</h1>
-              <p class="text-gray-600">{{ user?.bio || 'No bio available.' }}</p>
-              <p class="text-gray-600">{{ user?.location || 'No loaction available.' }}</p>
-            </div>
+    </div>
+
+    <div class="container mx-auto px-4 mt-10">
+      <div class="flex flex-col sm:flex-row justify-between items-center sm:items-end relative -mt-20 sm:-mt-24">
+        <div class="flex items-center sm:items-end space-x-4">
+          <div class="relative">
+            <img
+              [src]="user?.profilePicture || ''"
+              alt="Profile picture"
+              class="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-4 border-white object-cover"
+            />
           </div>
-  
-          <div class="flex mb-4 space-x-2">
-       
+          <div class="text-center sm:text-left">
+            <h1 class="text-2xl sm:text-3xl font-bold text-gray-900">{{ user?.username }}</h1>
+            <p class="text-gray-600 text-sm">{{ user?.bio || 'No bio available.' }}</p>
+            <p class="text-gray-600 text-sm">{{ user?.location || 'No location available.' }}</p>
           </div>
+        </div>
+        <div class="flex space-x-2 mt-4 sm:mt-0">
         </div>
       </div>
     </div>
-  
-    <div class="container mx-auto px-4 py-6">
-      <div class="bg-white p-4 rounded-md shadow-sm mb-4">
-        <h2 class="text-lg font-semibold">{{ user?.username }}'s Recent Post</h2>
-        <p class="text-gray-700 mt-2">
-          {{ user?.bio || 'No bio available.' }}
-        </p>
-      
-      </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-6">
+    <div class="bg-white p-4 sm:p-6 rounded-md shadow-sm mb-4">
+      <h2 class="text-lg font-semibold">{{ user?.username }}'s Recent Post</h2>
+      <p class="text-gray-700 mt-2">
+        {{ user?.bio || 'No bio available.' }}
+      </p>
     </div>
-  
+  </div>
 
+  <div class="border-t border-gray-300 pt-6">
+    <h2 class="text-xl sm:text-2xl font-bold text-gray-800 mb-4 sm:mb-6">Shared Places</h2>
 
-   
-  <div class="border-t border-gray-200 ">
-    <h2 class="text-2xl font-bold text-gray-800 mb-6">Shared Places</h2>
     <div *ngIf="sharedPlaces.length > 0; else noSharedPlaces">
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-8">
-        <div
-          *ngFor="let sharedPlace of sharedPlaces"
-          class="bg-white rounded-lg shadow-lg border border-gray-200"
-        >
-          <div class="p-4 flex items-center space-x-3 border-b border-gray-200">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div *ngFor="let sharedPlace of sharedPlaces" class="bg-white rounded-lg shadow ">
+          <div class="p-4 flex items-center space-x-3 shadow ">
             <button (click)="ToUserData(sharedPlace.user?.id)">
-              <img
-                [src]="sharedPlace.user?.profilePicture"
-                alt="Profile Picture"
-                class="h-10 w-10 rounded-full object-cover"
-              />
+              <img [src]="sharedPlace.user?.profilePicture" class="h-10 w-10 rounded-full object-cover" />
             </button>
-
             <div>
-              <h4 class="text-sm font-semibold text-gray-900">
-                {{ sharedPlace.user?.username }}
-              </h4>
-              <p class="text-xs text-gray-500">2 hours ago</p>
+              <h4 class="font-semibold text-gray-900">{{ sharedPlace.user?.username }}</h4>
             </div>
           </div>
+
           <div class="p-4">
-            <p class="text-lg font-medium text-black-500">
-              {{ sharedPlace.title }}
-            </p>
+            <p class="text-[15px]  text-gray-600"> {{ sharedPlace.title || " Chakeout  this place " }}  </p>
           </div>
 
-          <div class="p-4 flex items-center space-x-3 border-b border-gray-200">
+          <div class="p-4 flex items-center space-x-3 shadow ">
             <button (click)="ToUserData(sharedPlace.place.user.id)">
-              <img
-                [src]="sharedPlace.place.user?.profilePicture"
-                alt="Profile Picture"
-                class="h-10 w-10 rounded-full object-cover"
-              />
+              <img [src]="sharedPlace.place.user?.profilePicture" class="h-10 w-10 rounded-full object-cover" />
             </button>
-
             <div>
-              <h4 class="text-sm font-semibold text-gray-900">
-                {{ sharedPlace.place.user?.username }}
-              </h4>
-              <p class="text-xs text-gray-500">2 hours ago</p>
+              <h4 class="font-semibold">{{ sharedPlace.place.user?.username }}</h4>
             </div>
           </div>
 
           <div class="p-4">
-            <p class="text-lg font-medium text-green-500">
-              #{{ sharedPlace.place.name }}
-            </p>
-            <p class="text-sm text-gray-600">
-              {{ sharedPlace.place.description }}
-            </p>
+            <p class="text-green-600 font-semibold">#{{ sharedPlace.place.name }}</p>
+            <p class="text-sm text-gray-600">{{ sharedPlace.place.description }}</p>
           </div>
 
           <div *ngIf="sharedPlace.place?.images?.length > 0" class="p-4">
             <div class="grid grid-cols-2 gap-2">
-              <div
-                *ngFor="
-                  let image of sharedPlace.place.images.slice(0, 2);
-                  let i = index
-                "
-                class="relative cursor-pointer"
-                (click)="openGallery(sharedPlace.place.images)"
-              >
-                <img
-                  [src]="image.path"
-                  alt="Image de {{ sharedPlace.place.name }}"
-                  class="rounded-lg shadow-lg h-64 w-full object-cover"
-                />
-                <div
-                  *ngIf="i === 1 && sharedPlace.images?.length > 2"
-                  class="absolute inset-0 bg-black-10 flex items-center justify-center rounded-lg"
-                >
-                  <span
-                    class="text-black text-2xl font-bold bg-white p-2 rounded-full"
-                  >
-                    +{{ sharedPlace.images?.length - 2 }}
-                  </span>
+              <div *ngFor="let image of sharedPlace.place.images.slice(0, 2); let i = index" class="relative cursor-pointer" (click)="openGallery(sharedPlace.place.images)">
+                <img [src]="image.path" class="rounded-lg h-40 w-full object-cover" />
+                <div *ngIf="i === 1 && sharedPlace.images?.length > 2" class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center rounded-lg">
+                  <span class="text-white text-xl font-bold">+{{ sharedPlace.images?.length - 2 }}</span>
                 </div>
               </div>
             </div>
           </div>
+          <p *ngIf="!sharedPlace.place?.images?.length" class="text-gray-500 p-4">No images available</p>
 
-          <p
-            *ngIf="
-              !sharedPlace.place?.images ||
-              sharedPlace.place.images?.length === 0
-            "
-            class="text-gray-500 p-4"
-          >
-            Aucune image disponible
-          </p>
-
-          <div
-            *ngIf="showReviewForPlaceId === sharedPlace.place.id"
-            class="mt-6 p-10"
-          >
+          <div *ngIf="showReviewForPlaceId === sharedPlace.place.id" class="p-4">
             <app-review [placeId]="sharedPlace.place.id"></app-review>
           </div>
 
-          <div class="p-4 border-t border-gray-200">
-            <p class="text-sm text-gray-500 mb-2">
-              Catégories: {{ sharedPlace.place.category?.name }}
-            </p>
+          <div class="p-4 ">
+            <p class="text-sm text-gray-500 mb-2">Category: {{ sharedPlace.place.category?.name }}</p>
             <div class="flex justify-between items-center">
-              <div class="flex space-x-4">
-                <button
-                  class="flex items-center text-gray-500 hover:text-blue-500"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      d="M2 10.5a1.5 1.5 0 113 0v6a1.5 1.5 0 01-3 0v-6zM6 10.333v5.43a2 2 0 001.106 1.79l.05.025A4 4 0 008.943 18h5.416a2 2 0 001.962-1.608l1.2-6A2 2 0 0015.56 8H12V4a2 2 0 00-2-2 1 1 0 00-1 1v.667a4 4 0 01-.8 2.4L6.8 7.933a4 4 0 00-.8 2.4z"
-                    />
-                  </svg>
-                  <span class="ml-2">Liked</span>
-                </button>
-                <button
-                  class="flex items-center text-gray-500 hover:text-green-500"
-                  (click)="toggleReviewSection(sharedPlace.place?.id)"
-                  [disabled]="!sharedPlace.place.id"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-5 w-5"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123A7 7 0 012 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                  <span class="ml-2">Comment</span>
-                </button>
-              </div>
-
-              <!-- @if(currentUserId2 === place.user?.id) {
-            <div class="flex space-x-2">
-              <button
-                (click)="openForm(place)"
-                class="text-gray-500 hover:text-yellow-500"
-              >
-                ✏️
+              
+              <button class="flex items-center text-gray-500 hover:text-green-500" (click)="toggleReviewSection(sharedPlace.place?.id)">
+                <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20"><path d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123A7 7 0 012 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z"/></svg>
+                <span class="ml-2">Comment</span>
               </button>
-              <button
-                (click)="place.id && deletePlace(place.id)"
-                class="text-gray-500 hover:text-red-500"
-              >
-                🗑️
-              </button>
-            </div>
-            } -->
             </div>
           </div>
         </div>
       </div>
     </div>
-    <ng-template #noSharedPlaces>
-      <p class="text-gray-600">No shared places yet.</p>
-    </ng-template>
-</div>
 
+    <ng-template #noSharedPlaces>
+      <p class="text-gray-600 text-center mt-6">No shared places yet.</p>
+    </ng-template>
+  </div>
+</div>

@@ -23,7 +23,6 @@ import { Place } from '../services/place.service';
      <div class="relative w-full h-[400px]">
       <div #mapContainer class="h-full w-full rounded-lg z-10 border border-gray-300 dark:border-gray-600"></div>
       <div class="absolute top-3 right-3 z-20 bg-white dark:bg-gray-800 p-2 rounded-lg shadow-md flex flex-col gap-2">
-        <!-- Search Bar -->
         <div class="flex gap-2">
           <input
             #searchInput
@@ -39,7 +38,6 @@ import { Place } from '../services/place.service';
             Rechercher
           </button>
         </div>
-        <!-- My Location Button -->
         <button 
           type="button" 
           (click)="findMyLocation()"
@@ -170,35 +168,47 @@ export class MapComponent
 
 
 
-private reverseGeocode(lat: number, lng: number): void {
-  fetch(
-    `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`,
-    {
-      headers: {
-        'Accept-Language': 'fr', 
-      },
-    }
-  )
-    .then((response) => response.json())
-    .then((data) => {
-      const address = data.address;
-      const city = address.city || address.town || address.village || address.locality; 
-      const street = address.road || address.pedestrian || address.footway; 
-      const houseNumber = address.house_number;
-
-      const formattedAddress = `${street ? street + ' ' : ''}${houseNumber ? houseNumber + ', ' : ''}${city}`;
-
-      const updatedPlace: Partial<Place> = {
-        address: formattedAddress.trim(), 
-        latitude: lat,
-        longitude: lng,
-      };
-      this.placeChange.emit(updatedPlace);
-    })
-    .catch((error) => {
-      console.error('Error during reverse geocoding:', error);
-    });
-}
+  private reverseGeocode(lat: number, lng: number): void {
+    fetch(
+      `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&addressdetails=1`,
+      {
+        headers: {
+          'Accept-Language': 'fr', 
+        },
+      }
+    )
+      .then((response) => response.json())
+      .then((data) => {
+        const address = data.address;
+  
+        const city = address.city || address.town || address.village || address.locality;
+        const street = address.road || address.pedestrian || address.footway; 
+        const houseNumber = address.house_number; 
+        const placeName = data.name || data.display_name.split(',')[0]; 
+  
+        const excludedPlaceNames = ["Pachalik de Safi", "Other Generic Place"];
+  
+        let formattedAddress = '';
+        if (placeName && !excludedPlaceNames.includes(placeName.trim())) {
+          formattedAddress += placeName.trim() + ', '; 
+        }
+        if (street) formattedAddress += street.trim() + ' ';
+        if (houseNumber) formattedAddress += houseNumber.trim() + ', ';
+        if (city) formattedAddress += city.trim();
+  
+        formattedAddress = formattedAddress.replace(/,\s*$/, '');
+  
+        const updatedPlace: Partial<Place> = {
+          address: formattedAddress.trim(),
+          latitude: lat,
+          longitude: lng,
+        };
+        this.placeChange.emit(updatedPlace);
+      })
+      .catch((error) => {
+        console.error('Error during reverse geocoding:', error);
+      });
+  }
 
   findMyLocation(): void {
     if (!navigator.geolocation) {
