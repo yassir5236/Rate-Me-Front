@@ -1,77 +1,42 @@
-<div
-  class="min-h-screen flex flex-col bg-gradient-to-br from-sky-50 to-green-50"
->
-  <div class="flex">
+<div class="min-h-screen flex flex-col bg-gradient-to-br p-10 justify-center overflow-hidden from-sky-50 to-green-50">
+  <div class="flex  min-h-screen">
+    <!-- Sidebar -->
     <aside
-      class="w-72 bg-gradient-to-b from-sky-100 to-white text-gray-800 min-h-screen p-6 shadow-xl"
+    class="hidden lg:block md:w-64 lg:w-72 bg-gradient-to-b from-sky-100 to-white text-gray-800 p-6 shadow-xl min-h-screen"
     >
-      <h2
-        class="text-2xl font-extrabold mb-6 text-center tracking-wide text-sky-800"
-      >
+      <h2 class="text-2xl font-extrabold mb-6 text-center tracking-wide text-sky-800">
         Admin Panel
       </h2>
       <nav class="text-gray-700">
         <ul class="space-y-4">
+          <!-- Dashboard -->
           <li
             class="p-3 rounded-lg bg-gradient-to-r from-sky-400 to-sky-600 text-white hover:from-sky-500 hover:to-sky-700 transition-all cursor-pointer text-lg font-medium flex items-center space-x-3"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
             <span>Dashboard</span>
           </li>
+          <!-- Users -->
           <li
             class="p-3 rounded-lg hover:bg-gradient-to-r from-sky-400 to-sky-600 hover:text-white transition-all cursor-pointer text-lg font-medium flex items-center space-x-3"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
             </svg>
             <a routerLink="/user">Users</a>
           </li>
+          <!-- Categories -->
           <li
             class="p-3 rounded-lg hover:bg-gradient-to-r from-sky-400 to-sky-600 hover:text-white transition-all cursor-pointer text-lg font-medium flex items-center space-x-3"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-              />
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-              />
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
             </svg>
             <a routerLink="/category">Categories</a>
           </li>
@@ -79,57 +44,33 @@
       </nav>
     </aside>
 
-    <main class="flex-1 p-8">
-      <header
-        class="flex justify-between items-center bg-white shadow-md p-6 rounded-lg mb-8"
-      >
-        <h1 class="text-3xl font-bold text-sky-800">Dashboard</h1>
-        
+    <!-- Main content -->
+    <main class="flex-1 p-4 md:p-8">
+      <header class="flex justify-between items-center bg-white shadow-md p-4 md:p-6 rounded-lg mb-6">
+        <h1 class="text-2xl md:text-3xl font-bold text-sky-800">Dashboard</h1>
       </header>
-      <section class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <div
-          class="bg-white to-green-100 p-6 rounded-xl shadow-lg text-gray-700"
-        >
+
+      <!-- Statistics -->
+      <section class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 mb-6">
+        <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg text-gray-700">
           <h3 class="text-lg font-semibold">Total Users</h3>
-          <p class="text-4xl font-bold mt-2">
-            {{ statistics["totalUsers"] || 0 }}
-          </p>
-         
+          <p class="text-3xl md:text-4xl font-bold mt-2">{{ statistics["totalUsers"] || 0 }}</p>
         </div>
-        <div
-          class="bg-white to-green-100 p-6 rounded-xl shadow-lg text-gray-700"
-        >
+        <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg text-gray-700">
           <h3 class="text-lg font-semibold">Places</h3>
-          <p class="text-4xl font-bold mt-2">
-            {{ statistics["totalPlaces"] || 0 }}
-          </p>
-         
+          <p class="text-3xl md:text-4xl font-bold mt-2">{{ statistics["totalPlaces"] || 0 }}</p>
         </div>
-        <div
-          class="bg-white to-green-100 p-6 rounded-xl shadow-lg text-gray-700"
-        >
-          <h3 class="text-lg font-semibold">Total reviews</h3>
-          <p class="text-4xl font-bold mt-2">
-            {{ statistics["totalReviews"] || 0 }}
-          </p>
-          
+        <div class="bg-white p-4 md:p-6 rounded-xl shadow-lg text-gray-700">
+          <h3 class="text-lg font-semibold">Total Reviews</h3>
+          <p class="text-3xl md:text-4xl font-bold mt-2">{{ statistics["totalReviews"] || 0 }}</p>
         </div>
       </section>
 
-      <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-100">
-        <h2 class="text-2xl font-semibold mb-6 text-sky-800">
-          Places Growth Over Time
-        </h2>
-        <div
-          class="relative w-full h-64 bg-gradient-to-r from-sky-100 to-green-100 rounded-lg flex items-center justify-center text-sky-800 font-bold text-2xl shadow-inner"
-        >
-          <canvas
-            baseChart
-            [data]="lineChartData"
-            [options]="lineChartOptions"
-            chartType="line"
-          >
-          </canvas>
+      <!-- Graph -->
+      <div class="bg-white p-4 md:p-8 rounded-xl shadow-lg border border-gray-100">
+        <h2 class="text-xl md:text-2xl font-semibold mb-4 md:mb-6 text-sky-800">Places Growth Over Time</h2>
+        <div class="relative w-full h-64 bg-gradient-to-r from-sky-100 to-green-100 rounded-lg flex items-center justify-center text-sky-800 font-bold text-xl md:text-2xl shadow-inner">
+          <canvas baseChart [data]="lineChartData" [options]="lineChartOptions" chartType="line"></canvas>
         </div>
       </div>
     </main>

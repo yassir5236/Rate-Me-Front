@@ -8,6 +8,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
 import { provideStore } from '@ngrx/store';
 import { likesReducer } from './store/reducers/likes.reducer';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,7 +24,7 @@ export const appConfig: ApplicationConfig = {
       progressBar: true,
       closeButton: true,
     }),
-    provideStore({ likes: likesReducer }),
+    provideStore({ likes: likesReducer }), provideAnimationsAsync(),
 
   ],
 };

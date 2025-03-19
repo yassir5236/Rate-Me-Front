@@ -1,4 +1,8 @@
 import { Routes } from '@angular/router';
+import { AdminGuard } from './guards/admin.guard';
+import { AuthGuard } from './guards/auth.guard';
+import { OutGuard } from './guards/out.guard';
+import { PlaceResolver } from './resolvers/place.resolver';
 
 export const routes: Routes = [
   {
@@ -13,19 +17,22 @@ export const routes: Routes = [
     pathMatch: 'full',
     loadComponent: () =>
       import('./register/register.component').then((m) => m.RegisterComponent),
+    canActivate: [OutGuard],
     data: { animation: 'RegisterPage' },
   },
   {
     path: 'login',
     loadComponent: () =>
       import('./login/login.component').then((m) => m.LoginComponent),
+    canActivate: [OutGuard],
     data: { animation: 'LoginPage' },
   },
-  
+
   {
     path: 'profile',
     loadComponent: () =>
       import('./profile/profile.component').then((m) => m.ProfileComponent),
+    canActivate: [AuthGuard],
     data: { animation: 'Profile' },
   },
   {
@@ -34,11 +41,13 @@ export const routes: Routes = [
       import('./dashboard/dashboard.component').then(
         (m) => m.DashboardComponent
       ),
+    canActivate: [AdminGuard],
   },
   {
     path: 'category',
     loadComponent: () =>
       import('./category/category.component').then((m) => m.CategoryComponent),
+    canActivate: [AdminGuard],
     data: { animation: 'category' },
   },
   {
@@ -47,6 +56,7 @@ export const routes: Routes = [
       import('./place-management/place-management.component').then(
         (m) => m.PlaceManagementComponent
       ),
+    resolve: { places: PlaceResolver },
     data: { animation: 'places' },
   },
   {

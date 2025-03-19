@@ -83,6 +83,11 @@ export class AuthService {
     return this.isAuthenticated.asObservable();
   }
 
+  isLoggedIn2(): boolean {
+    return this.hasToken();
+  }
+  
+
   logout(): void {
     
     localStorage.removeItem('token');

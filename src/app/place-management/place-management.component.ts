@@ -12,7 +12,7 @@ import { CommonModule } from '@angular/common';
 import { UserService } from '../services/user.service';
 import { ReviewComponent } from '../review/review.component';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ShareService } from '../services/share.service';
 import { ShareRequestDTO } from '../models/share.model';
 import { SharePopupComponent } from '../share-popup/share-popup.component';
@@ -94,7 +94,8 @@ export class PlaceManagementComponent implements OnInit {
     private sanitizer: DomSanitizer,
     private router: Router,
     private shareService: ShareService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private route: ActivatedRoute
   ) {}
 
   openSharePopup(place: Place): void {
@@ -129,6 +130,8 @@ export class PlaceManagementComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.places = this.route.snapshot.data['places'];
+    this.currentGallery = this.places.flatMap(place => place.images?.map(img => img.path) || []);
     this.getPlaces();
     this.getCategories();
     this.initForm();
@@ -472,7 +475,6 @@ export class PlaceManagementComponent implements OnInit {
   loadLikesCount(): void {
     this.likeService.getLikesCountForEachPlace().subscribe({
       next: (countMap) => {
-        // Convert the object to a Map with number keys
         this.likesCountMap = new Map(
           Object.entries(countMap).map(([key, value]) => [Number(key), value])
         );
@@ -504,8 +506,9 @@ export class PlaceManagementComponent implements OnInit {
   getDirections(latitude: number | undefined, longitude: number | undefined): void {
     if (latitude && longitude) {
       const url = `https://www.google.com/maps/dir/?api=1&destination=${latitude},${longitude}`;
-      window.open(url, '_blank'); // Ouvre l'URL dans un nouvel onglet
+      window.open(url, '_blank'); 
     } else {
+      this.toastr.error('Latitude or longitude is missing')
       console.error('Latitude or longitude is missing.');
     }
   }

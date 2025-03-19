@@ -11,10 +11,10 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
+import { Toast, ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
-  // imports: [ReactiveFormsModule, RouterLink],
   imports: [ReactiveFormsModule],
 
   templateUrl: './login.component.html',
@@ -29,7 +29,8 @@ export class LoginComponent implements OnInit {
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    private toast: ToastrService
   ) {
     this.loginForm = this.fb.group({
       username: ['', [Validators.required]],
@@ -52,7 +53,7 @@ export class LoginComponent implements OnInit {
       const user = this.loginForm.value;
       this.authService.login(user).subscribe(
         (response) => {
-          alert('Connexion réussie');
+          this.toast.success('Welcome');
           this.router.navigate(['/profile']);
         },
         (error) => {

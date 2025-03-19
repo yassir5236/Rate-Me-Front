@@ -232,6 +232,9 @@ export class MapComponent
     );
   }
 
+
+
+
   searchPlace(query: string): void {
     if (!query) return;
 

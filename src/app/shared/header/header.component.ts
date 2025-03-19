@@ -16,6 +16,7 @@ export class HeaderComponent {
   userRole: string = '';
   isMenuOpen = false;
 
+
   constructor(
     private router: Router,
     private authService: AuthService,
@@ -44,6 +45,7 @@ export class HeaderComponent {
       this.authService.logout();
     }
   }
+
 }
 
 
