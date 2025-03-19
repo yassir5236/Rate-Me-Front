@@ -12,10 +12,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { Toast, ToastrService } from 'ngx-toastr';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule,CommonModule],
 
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -23,6 +24,9 @@ import { Toast, ToastrService } from 'ngx-toastr';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   isLoggedIn: boolean = false;
+  submitted = false; 
+
+
 
 
   constructor(
@@ -33,8 +37,22 @@ export class LoginComponent implements OnInit {
     private toast: ToastrService
   ) {
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      username: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(4),
+          Validators.maxLength(20),
+          Validators.pattern(/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/),
+        ],
+      ],
+      password: [
+        '',
+        [
+          Validators.required,
+          Validators.minLength(6),
+        ],
+      ],
     });
   }
 
@@ -48,7 +66,10 @@ export class LoginComponent implements OnInit {
   }
 
 
+  
   onSubmit(): void {
+    this.submitted = true; 
+
     if (this.loginForm.valid) {
       const user = this.loginForm.value;
       this.authService.login(user).subscribe(
@@ -64,13 +85,12 @@ export class LoginComponent implements OnInit {
     }
   }
   
-  
 
   test() {
     this.authService.test().subscribe(
       (response) => {
         console.log('Réponse du serveur:', response);
-        alert(response); // Affiche la réponse dans une alerte
+        alert(response); 
       },
       (error) => {
         console.error('Erreur lors de l’appel à test:', error);
@@ -79,5 +99,9 @@ export class LoginComponent implements OnInit {
     );
   }
 
+
+  get f() {
+    return this.loginForm.controls;
+  }
 
 }
